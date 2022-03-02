@@ -1,0 +1,6 @@
+/dist
+/src/vender
+*.json
+*.vue
+*.js
+/src
