@@ -22,6 +22,7 @@ instance.interceptors.request.use(
     // 携带 token
     // 1. 获取用户信息对象
     const { profile } = store.state.user
+    console.log(profile.token)
     // 2. 判断是否有token
     if (profile.token) {
       // 3. 设置token
@@ -41,7 +42,7 @@ instance.interceptors.response.use(
   },
   (error) => {
     // 401状态进入该函数
-    if (error.response && error.response.state === 401) {
+    if (error.response && error.response.status === 401) {
       // 1. 清空本地无效用户信息
       // 2. 跳转到登录页码
       // 3. 跳转需要传参 (当前路由地址) 给登录页码
