@@ -2,7 +2,6 @@
 <template>
   <div class="layout-container">
     <!-- 顶部通栏 -->
-    <!-- <nav>顶部通栏</nav> -->
     <AppTopnav class="d-none d-md-block"></AppTopnav>
     <!-- 头部组件 -->
     <AppHeader></AppHeader>
@@ -12,7 +11,7 @@
       <router-view></router-view>
     </div>
     <!-- 底部组件 -->
-    <footer>底部组件</footer>
+    <AppFooter></AppFooter>
   </div>
 </template>
 
@@ -20,12 +19,13 @@
 import { ref } from 'vue'
 import AppTopnav from '@/components/app-topnav.vue'
 import AppHeader from '@/components/app-header.vue'
+import AppFooter from '@/components/app-footer.vue'
 export default {
   name: 'Layout',
   setup() {
     return {}
   },
-  components: { AppTopnav, AppHeader },
+  components: { AppTopnav, AppHeader, AppFooter },
 }
 </script>
 
