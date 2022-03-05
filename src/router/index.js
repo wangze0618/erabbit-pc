@@ -1,5 +1,6 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 
+// 导入组件
 const Layout = () =>
     import('@/views/Layout.vue')
 const Home = () =>

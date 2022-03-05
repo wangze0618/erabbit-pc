@@ -15,8 +15,4 @@ export default {
 </script>
  
 <style scoped lang = "less">
-.box {
-    background-color: red;
-    .hoverShadow();
-}
 </style>

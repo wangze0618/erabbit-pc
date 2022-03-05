@@ -7,4 +7,5 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap/dist/js/bootstrap.bundle.min'
 import 'normalize.css'
 import '@/assets/styles/common.less'
+// import 'amfe-flexible'
 createApp(App).use(store).use(router).mount('#app')
