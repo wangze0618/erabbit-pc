@@ -1,11 +1,11 @@
 <template>
-  <div class="container">homepage</div>
+  <div class="top-category">1</div>
 </template>
 
 <script>
 import { ref } from 'vue'
 export default {
-  name: 'HomePage',
+  name: 'App',
   setup() {
     return {}
   },

@@ -18,9 +18,15 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <!-- 头部导航组件 -->
         <AppHeaderNav></AppHeaderNav>
-        <div class="search">
+        <div class="search" :class="{ searchLine: focus }">
           <i class="iconfont icon-search"></i>
-          <input type="text" class="search-input" placeholder="搜一搜" />
+          <input
+            type="text"
+            @focus="focus = true"
+            @blur="focus = false"
+            class="search-input"
+            placeholder="搜一搜"
+          />
         </div>
         <div class="cart">
           <a class="curr" href="#">
@@ -38,13 +44,21 @@ import AppHeaderNav from './app-header-nav.vue'
 export default {
   name: 'AppHeader',
   setup() {
-    return {}
+    const focus = ref(false)
+    // const focusFn = ()=>{
+    //   return focus.
+    // }
+    return { focus }
   },
   components: { AppHeaderNav },
 }
 </script>
 
 <style scoped lang="less">
+.searchLine {
+  transition: all 0.6s;
+  border: 1px solid @xtxColor !important;
+}
 @media screen and (max-width: 991px) {
   .navs {
     padding-left: 0 !important;
@@ -80,31 +94,6 @@ export default {
       background: url(../assets/images/logo.png) no-repeat center 18px / contain;
     }
   }
-  // .navs {
-  //   // width: 820px;
-  //   display: flex;
-  //   justify-content: space-around;
-  //   padding-left: 40px;
-  //   flex: 1;
-  //   li {
-  //     flex: 1;
-  //     //   margin-right: 40px;
-  //     //   width: 38px;
-  //     text-align: center;
-  //     a {
-  //       font-size: 16px;
-  //       line-height: 32px;
-  //       height: 32px;
-  //       display: inline-block;
-  //     }
-  //     &:hover {
-  //       a {
-  //         color: @xtxColor;
-  //         border-bottom: 1px solid @xtxColor;
-  //       }
-  //     }
-  //   }
-  // }
   .search {
     width: 170px;
     height: 40px;

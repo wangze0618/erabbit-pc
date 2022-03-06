@@ -16,13 +16,17 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import AppTopnav from '@/components/app-topnav.vue'
 import AppHeader from '@/components/app-header.vue'
 import AppFooter from '@/components/app-footer.vue'
+import { useStore } from 'vuex'
 export default {
   name: 'Layout',
   setup() {
+    const store = useStore()
+    store.dispatch('category/getList')
+
     return {}
   },
   components: { AppTopnav, AppHeader, AppFooter },

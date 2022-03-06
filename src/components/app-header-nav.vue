@@ -3,40 +3,50 @@
   <div class="app-header-nav">
     <ul class="navbar-nav me-auto mb-2 mb-lg-0 navs">
       <li class="home"><RouterLink to="/">首页</RouterLink></li>
-      <li>
-        <a href="#">美食</a>
-        <div class="layer d-none d-lg-block">
+      <li
+        v-for="(item, index) in list"
+        :key="item.id"
+        @mouseenter="show(item)"
+        @mouseleave="hide(item)"
+      >
+        <router-link @click="hide(item)" :to="`/category/${item.id}`">{{
+          item.name
+        }}</router-link>
+        <div class="layer d-none d-lg-block" :class="{ open: item.open }">
           <ul>
-            <li v-for="i in 10" :key="i">
-              <a href="#">
-                <img
-                  src="http://zhoushugang.gitee.io/erabbit-client-pc-static/uploads/img/category%20(4).png"
-                  alt=""
-                />
-                <p>果干</p>
-              </a>
+            <li v-for="sub in item.children" :key="sub.id">
+              <router-link @click="hide(item)" :to="`/category/sub/${sub.id}`">
+                <img :src="sub.picture" alt="" />
+                <p>{{ sub.name }}</p>
+              </router-link>
             </li>
           </ul>
         </div>
       </li>
-      <li><a href="#">餐厨</a></li>
-      <li><a href="#">艺术</a></li>
-      <li><a href="#">电器</a></li>
-      <li><a href="#">居家</a></li>
-      <li><a href="#">洗护</a></li>
-      <li><a href="#">孕婴</a></li>
-      <li><a href="#">服装</a></li>
-      <li><a href="#">杂货</a></li>
     </ul>
   </div>
 </template>
 
 <script>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import { useStore } from 'vuex'
 export default {
   name: 'App',
   setup() {
-    return {}
+    const store = useStore()
+    const list = computed(() => {
+      return store.state.category.list
+    })
+
+    // 控制二级分类显示和隐藏
+    const show = (item) => {
+      store.commit('category/show', item.id)
+    }
+    const hide = (item) => {
+      store.commit('category/hide', item.id)
+    }
+
+    return { list, show, hide }
   },
 }
 </script>
@@ -58,6 +68,16 @@ export default {
   }
 }
 .layer {
+  &.open {
+    height: 132px;
+    opacity: 1;
+  }
+  &.close {
+    height: 0;
+    opacity: 0;
+  }
+
+  width: 1240px;
   background-color: #fff;
   position: absolute;
   left: -200px;
@@ -103,12 +123,12 @@ export default {
     position: relative;
     flex: 1;
     li {
-      flex: 1;
+      // flex: 1;
       text-align: center;
       a {
         font-size: 16px;
         line-height: 32px;
-        height: 32px;
+        // height: 32px;
         display: inline-block;
       }
       &:hover {
@@ -117,8 +137,6 @@ export default {
           border-bottom: 1px solid @xtxColor;
         }
         > .layer {
-          height: 132px;
-          opacity: 1;
           z-index: 99;
         }
       }
