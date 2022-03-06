@@ -16,18 +16,8 @@
       </button>
       <!-- 菜单项 -->
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0 navs">
-          <li class="home"><RouterLink to="/">首页</RouterLink></li>
-          <li><a href="#">美食</a></li>
-          <li><a href="#">餐厨</a></li>
-          <li><a href="#">艺术</a></li>
-          <li><a href="#">电器</a></li>
-          <li><a href="#">居家</a></li>
-          <li><a href="#">洗护</a></li>
-          <li><a href="#">孕婴</a></li>
-          <li><a href="#">服装</a></li>
-          <li><a href="#">杂货</a></li>
-        </ul>
+        <!-- 头部导航组件 -->
+        <AppHeaderNav></AppHeaderNav>
         <div class="search">
           <i class="iconfont icon-search"></i>
           <input type="text" class="search-input" placeholder="搜一搜" />
@@ -44,11 +34,13 @@
 
 <script>
 import { ref, onMounted } from 'vue'
+import AppHeaderNav from './app-header-nav.vue'
 export default {
   name: 'AppHeader',
   setup() {
     return {}
   },
+  components: { AppHeaderNav },
 }
 </script>
 
@@ -88,31 +80,31 @@ export default {
       background: url(../assets/images/logo.png) no-repeat center 18px / contain;
     }
   }
-  .navs {
-    // width: 820px;
-    display: flex;
-    justify-content: space-around;
-    padding-left: 40px;
-    flex: 1;
-    li {
-      flex: 1;
-      //   margin-right: 40px;
-      //   width: 38px;
-      text-align: center;
-      a {
-        font-size: 16px;
-        line-height: 32px;
-        height: 32px;
-        display: inline-block;
-      }
-      &:hover {
-        a {
-          color: @xtxColor;
-          border-bottom: 1px solid @xtxColor;
-        }
-      }
-    }
-  }
+  // .navs {
+  //   // width: 820px;
+  //   display: flex;
+  //   justify-content: space-around;
+  //   padding-left: 40px;
+  //   flex: 1;
+  //   li {
+  //     flex: 1;
+  //     //   margin-right: 40px;
+  //     //   width: 38px;
+  //     text-align: center;
+  //     a {
+  //       font-size: 16px;
+  //       line-height: 32px;
+  //       height: 32px;
+  //       display: inline-block;
+  //     }
+  //     &:hover {
+  //       a {
+  //         color: @xtxColor;
+  //         border-bottom: 1px solid @xtxColor;
+  //       }
+  //     }
+  //   }
+  // }
   .search {
     width: 170px;
     height: 40px;
