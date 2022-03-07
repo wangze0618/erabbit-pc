@@ -12,4 +12,8 @@ export default {
 }
 </script>
 
-<style scoped lang="less"></style>
+<style scoped lang="less">
+.container {
+  height: 2000px;
+}
+</style>

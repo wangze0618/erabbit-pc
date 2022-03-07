@@ -1,5 +1,8 @@
 <template>
-  <header class="navbar navbar-expand-lg navbar-light bg-light app-header">
+  <header
+    class="navbar navbar-expand-lg navbar-light bg-light app-header"
+    :class="{ sticky: scrollTop }"
+  >
     <div class="container">
       <h1 class="logo"><RouterLink to="/">小兔鲜</RouterLink></h1>
       <!-- 汉堡菜单 -->
@@ -18,43 +21,87 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <!-- 头部导航组件 -->
         <AppHeaderNav></AppHeaderNav>
-        <div class="search" :class="{ searchLine: focus }">
-          <i class="iconfont icon-search"></i>
-          <input
-            type="text"
-            @focus="focus = true"
-            @blur="focus = false"
-            class="search-input"
-            placeholder="搜一搜"
-          />
-        </div>
-        <div class="cart">
-          <a class="curr" href="#">
-            <i class="iconfont icon-cart"></i><em>2</em>
-          </a>
-        </div>
+        <template v-if="!scrollTop">
+          <div class="search" :class="{ searchLine: focus }">
+            <i class="iconfont icon-search"></i>
+            <input
+              type="text"
+              @focus="focus = true"
+              @blur="focus = false"
+              class="search-input"
+              placeholder="搜一搜"
+            />
+          </div>
+          <div class="cart">
+            <a class="curr" href="#">
+              <i class="iconfont icon-cart"></i><em>2</em>
+            </a>
+          </div>
+        </template>
+        <template v-else>
+          <div class="right">
+            <ul>
+              <li><a href="#">品牌</a></li>
+              <li><a href="#">专题</a></li>
+            </ul>
+          </div>
+        </template>
       </div>
     </div>
   </header>
 </template>
 
 <script>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import AppHeaderNav from './app-header-nav.vue'
 export default {
   name: 'AppHeader',
   setup() {
+    const stickyNav = ref(true)
     const focus = ref(false)
-    // const focusFn = ()=>{
-    //   return focus.
-    // }
-    return { focus }
+    // 滚动距离
+    const scroll = ref(0)
+    const scrollFn = () => {
+      scroll.value = document.documentElement.scrollTop
+    }
+    onMounted(() => {
+      // 监听滚动事件
+      window.addEventListener('scroll', scrollFn, false)
+    })
+    const scrollTop = computed({
+      get() {
+        return scroll.value >= 78 ? true : false
+      },
+      immediate: true,
+    })
+    return { focus, stickyNav, scroll, scrollFn, scrollTop }
   },
+
   components: { AppHeaderNav },
 }
 </script>
 
 <style scoped lang="less">
+.right {
+  width: 220px;
+  border-left: 3px solid @xtxColor;
+  ul {
+    padding-left: 20px;
+    width: 100%;
+    display: flex;
+    font-size: 16px;
+    li {
+      margin-right: 40px;
+      width: 38px;
+      &:hover {
+        border-bottom: 1px solid @xtxColor;
+      }
+      a {
+        display: inline-block;
+      }
+    }
+  }
+}
 .searchLine {
   transition: all 0.6s;
   border: 1px solid @xtxColor !important;
@@ -74,6 +121,15 @@ export default {
 .nav-item {
   flex: 1;
 }
+.sticky {
+  height: 80px;
+  position: sticky;
+  top: 0;
+  // left: 0;
+  z-index: 999;
+  box-shadow: 2px 2px 2px lightgray;
+  transition: all 0.5s;
+}
 .navbar {
   padding-top: 0;
   padding-bottom: 0;
@@ -81,8 +137,10 @@ export default {
 .app-header {
   background: #fff;
   .container {
+    height: 100%;
     display: flex;
     align-items: center;
+    align-content: center;
   }
   .logo {
     width: 200px;
