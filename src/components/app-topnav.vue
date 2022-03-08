@@ -69,7 +69,7 @@ export default {
     align-items: center;
     li {
       a {
-        padding: 0 15px;
+        padding: 0 30px;
         color: #cdcdcd;
         line-height: 1;
         display: inline-block;

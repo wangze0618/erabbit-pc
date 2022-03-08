@@ -4,7 +4,7 @@
     <ul class="navbar-nav me-auto mb-2 mb-lg-0 navs">
       <li class="home"><RouterLink to="/">首页</RouterLink></li>
       <li
-        v-for="(item, index) in list"
+        v-for="item in list"
         :key="item.id"
         @mouseenter="show(item)"
         @mouseleave="hide(item)"
@@ -67,6 +67,10 @@ export default {
     padding-left: 0 !important;
   }
 }
+
+.navs {
+  padding-right: 20px;
+}
 .layer {
   &.open {
     height: 132px;
@@ -87,6 +91,7 @@ export default {
   opacity: 0;
   box-shadow: 0 0 5px #ccc;
   transition: all 0.2s 0.1s;
+  z-index: 9999 !important;
   ul {
     display: flex;
     flex-wrap: nowrap;

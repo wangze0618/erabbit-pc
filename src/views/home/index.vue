@@ -1,19 +1,20 @@
 <template>
-  <div class="container">homepage</div>
+  <div class="page-home">
+    <div class="home-entry">
+      <!-- 首页入口 -->
+      <div class="container">
+        <!-- 左侧分类 -->
+        <HomeCategory />
+        <!-- 轮播图 -->
+      </div>
+    </div>
+  </div>
 </template>
-
 <script>
-import { ref } from 'vue'
+import HomeCategory from './components/home-category'
 export default {
-  name: 'HomePage',
-  setup() {
-    return {}
-  },
+  name: 'PageHome',
+  components: { HomeCategory },
 }
 </script>
-
-<style scoped lang="less">
-.container {
-  height: 2000px;
-}
-</style>
+<style scoped lang="less"></style>

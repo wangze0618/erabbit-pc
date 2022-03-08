@@ -40,10 +40,8 @@
         </template>
         <template v-else>
           <div class="right">
-            <ul>
-              <li><a href="#">品牌</a></li>
-              <li><a href="#">专题</a></li>
-            </ul>
+            <a href="#">品牌</a>
+            <a href="#">专题</a>
           </div>
         </template>
       </div>
@@ -64,8 +62,8 @@ export default {
     const scrollFn = () => {
       scroll.value = document.documentElement.scrollTop
     }
+    // 监听滚动事件
     onMounted(() => {
-      // 监听滚动事件
       window.addEventListener('scroll', scrollFn, false)
     })
     const scrollTop = computed({
@@ -83,22 +81,15 @@ export default {
 
 <style scoped lang="less">
 .right {
+  display: flex;
   width: 220px;
   border-left: 3px solid @xtxColor;
-  ul {
-    padding-left: 20px;
-    width: 100%;
-    display: flex;
+  padding-left: 15px;
+  a {
     font-size: 16px;
-    li {
-      margin-right: 40px;
-      width: 38px;
-      &:hover {
-        border-bottom: 1px solid @xtxColor;
-      }
-      a {
-        display: inline-block;
-      }
+    margin-right: 20px;
+    &:hover {
+      color: @xtxColor;
     }
   }
 }
@@ -133,6 +124,7 @@ export default {
 .navbar {
   padding-top: 0;
   padding-bottom: 0;
+  padding-right: 20px;
 }
 .app-header {
   background: #fff;
