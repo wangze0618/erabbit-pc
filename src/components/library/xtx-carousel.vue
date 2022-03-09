@@ -1,5 +1,5 @@
 <template>
-  <div class="xtx-carousel">
+  <div class="xtx-carousel" @mouseenter="stop" @mouseleave="play">
     <!-- 图片容器 -->
     <ul class="carousel-body">
       <!-- 显示的图片加上 fade -->
@@ -15,17 +15,18 @@
       </li>
     </ul>
     <!-- 上一张 -->
-    <a href="javascript:;" class="carousel-btn prev"
+    <a @click="prev" href="javascript:;" class="carousel-btn prev"
       ><i class="iconfont icon-angle-left"></i
     ></a>
     <!-- 下一张 -->
-    <a href="javascript:;" class="carousel-btn next"
+    <a @click="next" href="javascript:;" class="carousel-btn next"
       ><i class="iconfont icon-angle-right"></i
     ></a>
     <!-- 5个指示器 -->
     <div class="carousel-indicator">
       <!-- active 激活点 -->
       <span
+        @click="showIndex = index"
         v-for="(item, index) in sliders"
         :key="index"
         :class="{ active: index === showIndex }"
@@ -35,7 +36,7 @@
 </template>
 
 <script>
-import { ref, onMounted, watch } from 'vue'
+import { ref, onUnmounted, watch } from 'vue'
 
 export default {
   name: 'XtxCarousel',
@@ -63,6 +64,7 @@ export default {
     // 自动轮播的逻辑
     let timer = null
     const autoPlay = () => {
+      clearInterval(timer)
       timer = setInterval(() => {
         if (showIndex.value >= props.sliders.length - 1) {
           showIndex.value = 0
@@ -77,9 +79,39 @@ export default {
         if (newVal.length && props.autoPlay) {
           autoPlay()
         }
-      }
+      },
+      { immediate: true }
     )
-    return { showIndex, autoPlay, timer }
+    // 鼠标移入暂停切换 移出自动播放
+    const stop = () => {
+      clearInterval(timer)
+    }
+    const play = () => {
+      if (props.sliders.length && props.autoPlay) {
+        autoPlay()
+      }
+    }
+    // 点击切换
+    const prev = () => {
+      if (showIndex.value <= 0) {
+        showIndex.value = props.sliders.length - 1
+      } else {
+        showIndex.value--
+      }
+    }
+    const next = () => {
+      if (showIndex.value >= props.sliders.length - 1) {
+        showIndex.value = 0
+      } else {
+        showIndex.value++
+      }
+    }
+
+    // 销毁组件 清楚定时器
+    onUnmounted(() => {
+      clearInterval(timer)
+    })
+    return { showIndex, stop, play, prev, next }
   },
 }
 </script>
