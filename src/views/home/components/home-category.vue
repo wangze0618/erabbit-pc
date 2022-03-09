@@ -12,6 +12,20 @@
             >{{ sub.name }}</RouterLink
           >
         </template>
+        <!-- 骨架 -->
+        <template v-else>
+          <XtxSkeleton
+            width="60px"
+            height="18px"
+            style="margin-right: 5px"
+            bg="rgba(255,255,255,0.2)"
+          ></XtxSkeleton>
+          <XtxSkeleton
+            width="50px"
+            height="18px"
+            bg="rgba(255,255,255,0.2)"
+          ></XtxSkeleton>
+        </template>
       </li>
     </ul>
     <!-- 右侧子菜单 -->
@@ -56,6 +70,7 @@
 import { useStore } from 'vuex'
 import { computed, reactive, ref, onMounted } from 'vue'
 import { findBrand } from '@/api/home'
+import XtxSkeleton from '@/components/library/xtx-skeleton.vue'
 export default {
   name: 'HomeCategory',
   setup() {
@@ -72,7 +87,6 @@ export default {
       // 品牌列表
       brands: [],
     })
-
     const store = useStore()
     // 最终使用的数据 = 9个分类 + 1个品牌
     const menuList = computed(() => {
@@ -93,7 +107,6 @@ export default {
     const currCategory = computed(() => {
       return menuList.value.find((item) => item.id === categoryId.value)
     })
-
     // 获取品牌数据
     onMounted(async () => {
       // brand.brands
@@ -102,10 +115,22 @@ export default {
     })
     return { menuList, categoryId, currCategory }
   },
+  components: { XtxSkeleton },
 }
 </script>
 
 <style scoped lang="less">
+.xtx-skeleton {
+  animation: fade 0.5s linear infinite alternate;
+}
+@keyframes fade {
+  from {
+    opacity: 0.2;
+  }
+  to {
+    opacity: 1;
+  }
+}
 .layer {
   width: 990px;
   height: 500px;
@@ -199,6 +224,7 @@ export default {
   background: rgba(0, 0, 0, 0.8);
   position: relative;
   z-index: 99;
+  margin-left: -10px;
   &:hover .layer {
     display: block;
   }

@@ -9,7 +9,7 @@ import store from '@/store'
 import router from '@/router'
 // 导出基准地址 原因是：
 // 其他地方不是通过axios发请求的地方也用上基准地址
-export const baseURL = 'http://pcapi-xiaotuxian-front-devtest.itheima.net/'
+export const baseURL = 'https://apipc-xiaotuxian-front.itheima.net/'
 const instance = axios.create({
   // axios的一些配置
   baseURL: baseURL,
