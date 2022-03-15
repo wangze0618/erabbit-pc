@@ -4,6 +4,7 @@ module.exports = defineConfig({
   transpileDependencies: true,
 
   devServer: {
+
     open: true,
   },
 

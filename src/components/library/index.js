@@ -2,11 +2,13 @@
 // Vue3没有全局过滤器
 
 import xtxCarousel from "./xtx-carousel.vue"
+import xtxMore from "./xtx-more.vue"
 import xtxSkeleton from "./xtx-skeleton.vue"
 
 export default {
     install(app) {
         app.component(xtxSkeleton.name, xtxSkeleton)
         app.component(xtxCarousel.name, xtxCarousel)
+        app.component(xtxMore.name, xtxMore)
     }
 }

@@ -10,3 +10,8 @@ export const findBrand = (limit = 6) => {
 export const findBanner = () => {
     return request('/home/banner', 'get')
 }
+
+// 首页-新鲜好物 
+export const findNew = () => {
+    return request('/home/new', 'get')
+}
