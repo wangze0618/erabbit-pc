@@ -20,11 +20,11 @@ export default {
     },
     width: {
       type: String,
-      default: '100px',
+      default: '200px',
     },
     height: {
       type: String,
-      default: '100px',
+      default: '300px',
     },
     animated: {
       type: Boolean,

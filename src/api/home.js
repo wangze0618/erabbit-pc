@@ -15,3 +15,8 @@ export const findBanner = () => {
 export const findNew = () => {
     return request('/home/new', 'get')
 }
+
+// 首页-人气推荐
+export const findHot = () => {
+    return request('/home/hot', 'get')
+}
