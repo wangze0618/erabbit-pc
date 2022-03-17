@@ -6,22 +6,33 @@
       <HomeCategory />
       <!-- 轮播图 -->
       <HomeBanner />
+      <!-- 新鲜好物 -->
+      <HomeNew />
+      <!-- 人气推荐 -->
+      <HomeHot />
+      <!-- 热门品牌 -->
+      <HomeBrand />
     </div>
-
-    <!-- 新鲜好物 -->
-    <HomeNew />
-    <!-- 人气推荐 -->
-    <HomeHot />
   </div>
 </template>
 <script>
-import HomeBanner from './components/home-banner.vue'
 import HomeCategory from './components/home-category'
 import HomeNew from './components/home-new.vue'
 import HomeHot from './components/home-hot.vue'
+import HomeSkeleton from './components/home-skeleton.vue'
+import HomeBrand from './components/home-brand.vue'
+import HomeBanner from './components/home-banner.vue'
+
 export default {
   name: 'PageHome',
-  components: { HomeCategory, HomeBanner, HomeNew, HomeHot },
+  components: {
+    HomeCategory,
+    HomeNew,
+    HomeHot,
+    HomeSkeleton,
+    HomeBrand,
+    HomeBanner,
+  },
 }
 </script>
 <style scoped lang="less"></style>

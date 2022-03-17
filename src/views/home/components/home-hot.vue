@@ -23,21 +23,22 @@
 <script>
 import { ref, onMounted } from 'vue'
 import xtxMore from '@/components/library/xtx-more.vue'
-import HomePannel from './home-pannel.vue'
+import HomePannel from './home-panel.vue'
 import { findHot } from '@/api/home'
 import HomeSkeleton from './home-skeleton.vue'
 import { useLazyData } from '@/hooks'
 export default {
-  name: 'HomeNew',
+  name: 'HomeHot',
   setup() {
-    // 获取 新鲜好物 商品列表
     // const list = ref([])
     // onMounted(async () => {
     //   const { result } = await findHot()
     //   list.value = result
     // })
-    const { data, target } = useLazyData(findHot)
 
+    // 获取 新鲜好物 商品列表
+    // 数据懒加载
+    const { data, target } = useLazyData(findHot)
     return { list: data, target }
   },
   components: { HomePannel, xtxMore, HomeSkeleton },

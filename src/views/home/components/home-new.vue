@@ -24,7 +24,7 @@
 <script>
 import { ref, onMounted } from 'vue'
 import xtxMore from '@/components/library/xtx-more.vue'
-import HomePannel from './home-pannel.vue'
+import HomePannel from './home-panel.vue'
 import { findNew } from '@/api/home'
 import HomeSkeleton from './home-skeleton.vue'
 import { useLazyData } from '@/hooks/index'
