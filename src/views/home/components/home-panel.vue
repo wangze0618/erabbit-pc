@@ -41,7 +41,7 @@ export default {
   .head {
     padding: 40px 0;
     display: flex;
-    align-items: flex-end;
+    align-items: center;
     h3 {
       flex: 1;
       font-size: 32px;

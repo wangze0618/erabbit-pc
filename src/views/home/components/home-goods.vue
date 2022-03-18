@@ -1,14 +1,13 @@
 <template>
   <div class="goods-item">
-    <RouterLink to="/" class="image">
-      <img
-        src="http://zhoushugang.gitee.io/erabbit-client-pc-static/uploads/fresh_goods_1.jpg"
-        alt=""
-      />
+    <RouterLink :to="`/product/${goods.id}`" class="image img-fluid">
+      <img :src="goods.picture" alt="" />
     </RouterLink>
-    <p class="name ellipsis-2">美威 智利原味三文鱼排 240g/袋 4片装</p>
-    <p class="desc">海鲜年货</p>
-    <p class="price">&yen;108.00</p>
+    <p class="name ellipsis-2">{{ goods.name }}</p>
+    <p class="desc">
+      {{ goods.desc }}
+    </p>
+    <p class="price">&yen;{{ goods.price }}</p>
     <div class="extra">
       <RouterLink to="/">
         <span>找相似</span>
@@ -18,15 +17,23 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'HomeGoods',
-}
+<script setup name="HomeGoods">
+const props = defineProps({
+  goods: {
+    type: Object,
+    default: () => [],
+  },
+})
 </script>
 
 <style scoped lang="less">
+.description {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
 .goods-item {
-  width: 240px;
+  //   width: 240px;
   height: 300px;
   padding: 10px 30px;
   position: relative;
@@ -35,12 +42,14 @@ export default {
   transition: all 0.5s;
   .image {
     display: block;
-    width: 160px;
-    height: 160px;
     margin: 0 auto;
+    width: 140px;
+    height: 140px;
     img {
-      width: 100%;
-      height: 100%;
+      width: 140px;
+      height: 140px;
+      // width: 100%;
+      // height: 100%;
     }
   }
   p {
@@ -50,12 +59,19 @@ export default {
       height: 44px;
     }
     &.desc {
+      width: 140px;
+      display: inline-block;
       color: #666;
       height: 22px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
     &.price {
+      text-align: center;
       margin-top: 10px;
-      font-size: 20px;
+      font-size: 22px;
+      font-weight: 700;
       color: @priceColor;
     }
   }
