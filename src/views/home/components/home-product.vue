@@ -17,7 +17,7 @@
           class="cover d-none d-lg-block"
           :to="`/category/${cate.id}`"
         >
-          <img class="img-fluid" :src="cate.picture" alt="" />
+          <img class="img-fluid" v-lazyLoad="cate.picture" alt="" />
           <strong class="label">
             <span>{{ cate.name }}</span>
             <span>{{ cate.saleInfo }}</span>

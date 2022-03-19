@@ -221,7 +221,8 @@ export default {
 .home-category {
   width: 250px;
   height: 500px;
-  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(5px);
+  background: rgba(0, 0, 0, 0.7);
   position: relative;
   z-index: 99;
   margin-left: -10px;
