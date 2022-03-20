@@ -148,4 +148,11 @@ export default {
     }
   }
 }
+
+.router-link-exact-active {
+  padding: 0 7px;
+  border-radius: 5px;
+  color: #fff !important;
+  background-color: @xtxColor;
+}
 </style>
