@@ -120,7 +120,7 @@ export default {
   width: 100%;
   height: 100%;
   min-width: 300px;
-  min-height: 150px;
+  min-height: 250px;
   position: relative;
 
   .carousel {
