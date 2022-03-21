@@ -1,17 +1,3 @@
-<!-- <template>
-  <div class="xtx-bread">
-    <slot />
-  </div>
-</template> -->
-<!-- <template><render /></template> -->
-
-<!-- <script setup name="XtxBread">
-import { h } from 'vue'
-const props = defineProps()
-console.log(props.value)
-const render = () => h('div', { class: 'xtx-bread' })
-</script> -->
-
 <script>
 import { h } from 'vue'
 export default {
