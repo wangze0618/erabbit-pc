@@ -74,8 +74,10 @@ export default {
     let disablePrev = ref(false)
     onMounted(() => {
       window.addEventListener('scroll', () => {
-        width.value = window.innerWidth
-        boxWidth.value = box.value.offsetWidth
+        try {
+          width.value = window.innerWidth
+          boxWidth.value = box.value.offsetWidth
+        } catch (error) {}
       })
     })
 

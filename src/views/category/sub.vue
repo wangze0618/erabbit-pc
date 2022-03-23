@@ -1,15 +1,18 @@
 <template>
-  <div class="sub-category">2</div>
+  <div class="sub-category">
+    <div class="container">
+      <!-- 面包屑 -->
+      <SubBread />
+      <!-- 筛选区 -->
+      <SubFilter />
+    </div>
+  </div>
 </template>
 
-<script>
+<script setup>
 import { ref } from 'vue'
-export default {
-  name: 'App',
-  setup() {
-    return {}
-  },
-}
+import SubBread from './sub-bread.vue'
+import SubFilter from './sub-filter.vue'
 </script>
 
 <style scoped lang="less"></style>

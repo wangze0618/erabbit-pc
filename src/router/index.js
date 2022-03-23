@@ -24,6 +24,10 @@ const router = createRouter({
   // 使用hash 路由模式
   history: createWebHashHistory(),
   routes,
+  scrollBehavior(to, from, savedPosition) {
+    // 始终滚动到顶部
+    return { top: 0 }
+  },
 })
 
 export default router

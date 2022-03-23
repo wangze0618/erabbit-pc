@@ -21,6 +21,8 @@ import AppTopnav from '@/components/app-topnav.vue'
 import AppHeader from '@/components/app-header.vue'
 import AppFooter from '@/components/app-footer.vue'
 import { useStore } from 'vuex'
+import XtxMore from '@/components/library/xtx-more.vue'
+import XtxBacktop from '@/components/library/xtx-backtop.vue'
 export default {
   name: 'Layout',
 
@@ -28,9 +30,11 @@ export default {
     const store = useStore()
     store.dispatch('category/getList')
 
-    return {}
+    const target = ref(null)
+
+    return { target }
   },
-  components: { AppTopnav, AppHeader, AppFooter },
+  components: { AppTopnav, AppHeader, AppFooter, XtxMore, XtxBacktop },
 }
 </script>
 
