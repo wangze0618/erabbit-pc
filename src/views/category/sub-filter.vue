@@ -4,6 +4,8 @@
       <div class="head">品牌：</div>
       <div class="body">
         <a
+          @click="filterData.brands.selectedBrand = item.id"
+          :class="{ active: item.id === filterData.brands.selectedBrand }"
           href="javascript:;"
           v-for="item in filterData.brands"
           :key="item.id"
@@ -14,9 +16,14 @@
     <div class="item" v-for="item in filterData.saleProperties" :key="item.id">
       <div class="head">{{ item.name }}：</div>
       <div class="body">
-        <a href="javascript:;" v-for="prop in item.properties" :key="prop.id">{{
-          prop.name
-        }}</a>
+        <a
+          @click="item.selectedAttr = prop.id"
+          href="javascript:;"
+          v-for="prop in item.properties"
+          :key="prop.id"
+          :class="{ active: prop.id === item.selectedAttr }"
+          >{{ prop.name }}</a
+        >
       </div>
     </div>
   </div>
@@ -28,10 +35,6 @@
       width="800px"
       height="20px"
     />
-    <!-- <XtxSkeleton animated class="item skl-item" width="800px" height="20px" />
-    <XtxSkeleton animated class="item skl-item" width="600px" height="20px" />
-    <XtxSkeleton animated class="item skl-item" width="600px" height="20px" />
-    <XtxSkeleton animated class="item skl-item" width="600px" height="20px" /> -->
   </div>
 </template>
 <script setup>
@@ -44,6 +47,7 @@ const route = useRoute()
 const filterData = ref(null)
 const filterLoading = ref(false)
 
+// 监听 路由id 变化
 watch(
   () => route.params.id,
   async (newVal) => {
@@ -54,9 +58,11 @@ watch(
       const { result } = await findSubCategoryFilter(newVal)
       // 给每一组可选的筛选条件缺失 ‘全部’ 条件，处理下数据加上‘全部’
       // 1. 品牌
+      result.brands.selectedBrand = ref(null) // 选中的品牌 记录id
       result.brands.unshift({ id: null, name: '全部' })
       // 2，属性
       result.saleProperties.forEach((item) => {
+        item.selectedAttr = ref(null) // 选中的属性 记录id
         item.properties.unshift({ id: null, name: '全部' })
       })
       filterData.value = result
