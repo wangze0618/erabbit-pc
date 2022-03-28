@@ -1,9 +1,7 @@
 <template>
-  <RouterLink
-    :to="`/product/${goods.id}`"
-    class="col-12 col-sm-6 col-md-4 col-lg-auto goods-item"
-  >
-    <img :src="goods.picture" alt="" />
+  <!-- col-12 col-sm-6 col-md-4 col-lg-auto  -->
+  <RouterLink :to="`/product/${goods.id}`" class="goods-item">
+    <img v-ShowDefaultImg :src="goods.picture" alt="" />
     <p class="name ellipsis">{{ goods.name }}</p>
     <p class="desc ellipsis">{{ goods.desc }}</p>
     <p class="price">&yen;{{ goods.price }}</p>
@@ -24,8 +22,9 @@ defineProps({
 .goods-item {
   display: block;
   max-width: 240px;
-  padding: 20px 30px;
+  padding: 20px 20px;
   text-align: center;
+  margin-right: 0px;
   &:hover {
     color: unset;
   }

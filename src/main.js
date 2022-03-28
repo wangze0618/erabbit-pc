@@ -39,4 +39,14 @@ app.directive('lazyLoad', {
     observe.observe(el)
   },
 })
+
+// 指令-无数据情况下显示默认图片
+app.directive('ShowDefaultImg', {
+  mounted(el, binding) {
+    el.onerror = () => {
+      el.src = defaultImg
+    }
+    el.src = binding.value
+  },
+})
 app.use(store).use(router).use(UI).mount('#app')
