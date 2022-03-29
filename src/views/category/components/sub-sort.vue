@@ -46,19 +46,29 @@
       </a>
     </div>
     <div class="check">
-      <XtxCheckbox>仅显示有货商品</XtxCheckbox>
-      <XtxCheckbox>仅显示特惠商品</XtxCheckbox>
+      <XtxCheckbox
+        @change="changeCheck"
+        v-model:modelValue="sortParams.inventory"
+        >仅显示有货商品</XtxCheckbox
+      >
+      <XtxCheckbox
+        @change="changeCheck"
+        v-model:modelValue="sortParams.onlyDiscount"
+        >仅显示特惠商品</XtxCheckbox
+      >
     </div>
   </div>
 </template>
 <script setup>
 import { reactive } from 'vue'
 import XtxCheckbox from '@/components/library/xtx-checkbox.vue'
+
 // 1. 根据后台需要的参数定义数据对象
 // 2. 根据数据对象，绑定组件（复选框，排序按钮）
 // 3. 在操作排序组件的时候，需要反馈给数据对象
 // sortField====>publishTime,orderNum,price,evaluateNum
 // sortMethod====>asc为正序 desc为倒序
+const emit = defineEmits(['sort-change'])
 
 const sortParams = reactive({
   inventory: false,
@@ -76,6 +86,11 @@ const changeSort = (sortField) => {
     }
   }
   sortParams.sortField = sortField
+  emit('sort-change', sortParams)
+}
+
+const changeCheck = () => {
+  emit('sort-change', sortParams)
 }
 </script>
 <style scoped lang="less">

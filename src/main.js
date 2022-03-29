@@ -45,8 +45,8 @@ app.directive('ShowDefaultImg', {
   mounted(el, binding) {
     el.onerror = () => {
       el.src = defaultImg
+      el.src = binding.value
     }
-    el.src = binding.value
   },
 })
 app.use(store).use(router).use(UI).mount('#app')

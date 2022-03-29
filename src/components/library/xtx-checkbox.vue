@@ -18,7 +18,7 @@ const props = defineProps({
   },
 })
 // 定义emit
-const emit = defineEmits(['change'])
+const emit = defineEmits(['change', 'modelValue'])
 // 更改复选框状态
 const checked = ref(false)
 const checkedChange = () => {
