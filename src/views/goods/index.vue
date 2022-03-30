@@ -1,23 +1,24 @@
 <template>
-  <div class="xtx-goods-page">
+  <div class="xtx-goods-page" v-if="goods">
     <div class="container">
       <!-- 面包屑 -->
       <XtxBread>
         <XtxBreadItem to="/">首页</XtxBreadItem>
-        <XtxBreadItem
-          v-if="goods"
-          :to="`/category/${goods.categories[1].id}`"
-          >{{ goods.categories[1].name }}</XtxBreadItem
-        >
-        <XtxBreadItem
-          v-if="goods"
-          :to="`/category/sub/${goods.categories[0].id}`"
-          >{{ goods.categories[0].name }}</XtxBreadItem
-        >
-        <XtxBreadItem v-if="goods">{{ goods.name }}</XtxBreadItem>
+        <XtxBreadItem :to="`/category/${goods.categories[1].id}`">{{
+          goods.categories[1].name
+        }}</XtxBreadItem>
+        <XtxBreadItem :to="`/category/sub/${goods.categories[0].id}`">{{
+          goods.categories[0].name
+        }}</XtxBreadItem>
+        <XtxBreadItem>{{ goods.name }}</XtxBreadItem>
       </XtxBread>
       <!-- 商品信息 -->
-      <div class="goods-info"></div>
+      <div class="goods-info">
+        <div class="media">
+          <GoodImage :images="goods.mainPictures" />
+        </div>
+        <div class="spec"></div>
+      </div>
       <!-- 商品推荐 -->
       <GoodsRelevant />
       <!-- 商品详情 -->
@@ -36,12 +37,13 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { nextTick, ref, watch } from 'vue'
 import XtxBread from '@/components/library/xtx-bread.vue'
 import XtxBreadItem from '@/components/library/xtx-bread-item.vue'
 import GoodsRelevant from './components/goods-relevant'
 import { useRoute } from 'vue-router'
 import { findProduct } from '@/api/product'
+import GoodImage from './components/good-image.vue'
 const route = useRoute()
 
 // 获取商品详情
@@ -52,7 +54,11 @@ const useGoods = () => {
     async (newVal) => {
       if (newVal && route.path == `/product/${newVal}`) {
         const { result } = await findProduct(newVal)
-        goods.value = result
+        // 目的是更新数据
+        goods.value = null
+        nextTick(() => {
+          goods.value = result
+        })
       }
     },
     { immediate: true }
@@ -67,6 +73,16 @@ console.log(goods)
 .goods-info {
   min-height: 600px;
   background: #fff;
+  display: flex;
+  .media {
+    width: 580px;
+    height: 600px;
+    padding: 30px 50px;
+  }
+  .spec {
+    flex: 1;
+    padding: 30px 30px 30px 0;
+  }
 }
 .goods-footer {
   display: flex;
