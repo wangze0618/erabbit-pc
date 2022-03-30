@@ -1,8 +1,7 @@
-const { defineConfig } = require("@vue/cli-service");
+const { defineConfig } = require('@vue/cli-service')
 const path = require('path')
 module.exports = defineConfig({
   transpileDependencies: true,
-
   devServer: {
     port: 8080,
     open: true,
@@ -13,8 +12,8 @@ module.exports = defineConfig({
       preProcessor: 'less',
       patterns: [
         path.join(__dirname, './src/assets/styles/variables.less'),
-        path.join(__dirname, './src/assets/styles/mixins.less')
-      ]
-    }
-  }
-});
+        path.join(__dirname, './src/assets/styles/mixins.less'),
+      ],
+    },
+  },
+})
