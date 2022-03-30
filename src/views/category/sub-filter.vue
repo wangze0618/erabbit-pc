@@ -4,7 +4,7 @@
       <div class="head">品牌：</div>
       <div class="body">
         <a
-          @click="filterData.brands.selectedBrand = item.id"
+          @click="changeBrand(item.id)"
           :class="{ active: item.id === filterData.brands.selectedBrand }"
           href="javascript:;"
           v-for="item in filterData.brands"
@@ -17,7 +17,7 @@
       <div class="head">{{ item.name }}：</div>
       <div class="body">
         <a
-          @click="item.selectedAttr = prop.id"
+          @click="changeProp(item, prop.id)"
           href="javascript:;"
           v-for="prop in item.properties"
           :key="prop.id"
@@ -42,6 +42,7 @@ import { findSubCategoryFilter } from '@/api/category'
 import XtxSkeleton from '@/components/library/xtx-skeleton.vue'
 import { ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
+const emit = defineEmits(['filter-change'])
 const route = useRoute()
 // 监听二级类目ID的变化获取筛选数据
 const filterData = ref(null)
@@ -71,6 +72,17 @@ watch(
   },
   { immediate: true }
 )
+
+// 选中的品牌
+const changeBrand = (brandId) => {
+  filterData.value.selectedBrand = brandId
+  emit('filter-change')
+}
+// 选中的品牌
+const changeProp = (item, propId) => {
+  item.selectedAttr = propId
+  emit('filter-change')
+}
 </script>
 <style scoped lang="less">
 // 骨架屏
