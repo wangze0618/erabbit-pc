@@ -66,7 +66,6 @@ const useGoods = () => {
   return goods
 }
 const goods = useGoods()
-console.log(goods)
 </script>
 
 <style scoped lang="less">
