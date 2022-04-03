@@ -51,11 +51,14 @@ const largePosition = reactive({
   backgroundPositionY: 0,
 })
 
+// 获取坐标
 const { isOutside, elementX, elementY } = useMouseInElement(target)
 watch([isOutside, elementX, elementY], () => {
+  // 是否显示遮罩层
   showLayer.value = !isOutside.value
   const position = { x: 0, y: 0 }
 
+  // 限定遮罩层移动的范围 中间区域
   if (elementX.value < 100) position.x = 0
   else if (elementX.value > 300) position.x = 200
   else position.x = elementX.value - 100
@@ -64,6 +67,7 @@ watch([isOutside, elementX, elementY], () => {
   else if (elementY.value > 300) position.y = 200
   else position.y = elementY.value - 100
 
+  // 设置值
   layerPosition.left = `${position.x}px`
   layerPosition.top = `${position.y}px`
   largePosition.backgroundPositionX = `${-2 * position.x}px`

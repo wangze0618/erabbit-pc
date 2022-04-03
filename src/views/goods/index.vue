@@ -15,9 +15,12 @@
       <!-- 商品信息 -->
       <div class="goods-info">
         <div class="media">
-          <GoodImage :images="goods.mainPictures" />
+          <GoodsImage :images="goods.mainPictures" />
+          <GoodsSales />
         </div>
-        <div class="spec"></div>
+        <div class="spec">
+          <GoodsName :goods="goods" />
+        </div>
       </div>
       <!-- 商品推荐 -->
       <GoodsRelevant />
@@ -43,7 +46,9 @@ import XtxBreadItem from '@/components/library/xtx-bread-item.vue'
 import GoodsRelevant from './components/goods-relevant'
 import { useRoute } from 'vue-router'
 import { findProduct } from '@/api/product'
-import GoodImage from './components/good-image.vue'
+import GoodsImage from './components/goods-image.vue'
+import GoodsSales from './components/goods-sales.vue'
+import GoodsName from './components/goods-name.vue'
 const route = useRoute()
 
 // 获取商品详情
@@ -69,12 +74,14 @@ const goods = useGoods()
 </script>
 
 <style scoped lang="less">
+@media screen and (max-width: 576px) {
+}
 .goods-info {
   min-height: 600px;
   background: #fff;
   display: flex;
   .media {
-    width: 580px;
+    // width: 580px;
     height: 600px;
     padding: 30px 50px;
   }
