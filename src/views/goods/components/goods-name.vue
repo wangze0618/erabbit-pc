@@ -13,7 +13,7 @@
     <dl>
       <!-- 城市组件 -->
       <dt>配送</dt>
-      <dd>至 <XtxCity></XtxCity></dd>
+      <dd>至 <XtxCity @change="changeCity" :fullLocation="fullLocation" /></dd>
     </dl>
     <dl>
       <dt>服务</dt>
@@ -36,6 +36,31 @@ const props = defineProps({
     default: () => ({}),
   },
 })
+// 提供给后台的四项数据 (没登录)
+const provinceCode = ref('110000')
+const cityCode = ref('119900')
+const countyCode = ref('110101')
+const fullLocation = ref('北京市 市辖区 东城区')
+
+// 取出用户收货地址中默认的地址给四个数据赋值 (已登录状态)
+if (props.goods.userAddresses) {
+  const defaultAddress = props.goods.userAddresses.find(
+    (item) => item.isDefault === 1
+  )
+  if (defaultAddress) {
+    provinceCode.value = defaultAddress.provinceCode
+    cityCode.value = defaultAddress.cityCode
+    countyCode.value = defaultAddress.countyCode
+    fullLocation.value = defaultAddress.fullLocation
+  }
+}
+// 接受子组件的城市数据
+const changeCity = (result) => {
+  provinceCode.value = result.provinceCode
+  cityCode.value = result.cityCode
+  countyCode.value = result.countyCode
+  fullLocation.value = result.fullLocation
+}
 </script>
 
 <style lang="less" scoped>

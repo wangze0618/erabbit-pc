@@ -5,16 +5,20 @@
       @click="visible ? close() : open()"
       :class="{ active: visible }"
     >
-      <span class="placeholder">请选择配送地址</span>
-      <span class="value"></span>
+      <span v-if="!fullLocation" class="placeholder">请选择配送地址</span>
+      <span v-else class="value">{{ fullLocation }}</span>
       <i class="iconfont icon-angle-down"></i>
     </div>
     <div class="option" v-if="visible">
       <XtxLoading v-if="loading"></XtxLoading>
       <template v-else>
-        <span class="ellipsis" v-for="item in currentList" :key="item.code">{{
-          item.name
-        }}</span>
+        <span
+          class="ellipsis"
+          @click="changeItem(item)"
+          v-for="item in currentList"
+          :key="item.code"
+          >{{ item.name }}</span
+        >
       </template>
     </div>
   </div>
@@ -22,9 +26,15 @@
 <script setup>
 import { onClickOutside } from '@vueuse/core'
 import axios from 'axios'
-import { ref, computed } from 'vue'
+import { ref, computed, reactive } from 'vue'
 import XtxLoading from './xtx-loading.vue'
-
+const props = defineProps({
+  fullLocation: {
+    type: String,
+    default: '',
+  },
+})
+const emit = defineEmits(['change'])
 // 显示隐藏数据
 const visible = ref(false)
 // 所有省市区的数据
@@ -35,6 +45,9 @@ const loading = ref(false)
 // 打开函数
 const open = async () => {
   visible.value = true
+  for (const key in changeResult) {
+    changeResult[key] = ''
+  }
   allCityData.value = await getCityData()
   loading.value = false
 }
@@ -49,15 +62,58 @@ onClickOutside(target, () => {
   close()
 })
 
+// 记录选择的省市区数据
+const changeResult = reactive({
+  provinceCode: '',
+  provinceName: '',
+  cityCode: '',
+  cityCode: '',
+  countyCode: '',
+  countyName: '',
+  fullLocation: '',
+})
+
 // 计算属性 获取当前显示的地区数组
 const currentList = computed(() => {
   // 默认 省一级
-  const list = allCityData.value
+  let list = allCityData.value
   // 市一级
+  if (changeResult.provinceCode && changeResult.provinceName) {
+    list = list.find((p) => p.code === changeResult.provinceCode).areaList
+  }
   // 县、区一级
-
+  if (changeResult.cityCode && changeResult.cityName) {
+    list = list.find((p) => p.code === changeResult.cityCode).areaList
+  }
   return list
 })
+
+// 点击按钮记录数据
+const changeItem = (item) => {
+  // 省
+  if (item.level == 0) {
+    changeResult.provinceCode = item.code
+    changeResult.provinceName = item.name
+  }
+  // 市
+  if (item.level == 1) {
+    changeResult.cityCode = item.code
+    changeResult.cityName = item.name
+  }
+  // 地区
+  if (item.level == 2) {
+    changeResult.countyCode = item.code
+    changeResult.countyName = item.name
+
+    // 最后一级（选完了）
+    close()
+    changeResult.fullLocation =
+      changeResult.provinceName +
+      changeResult.cityName +
+      changeResult.countyName
+    emit('change', changeResult)
+  }
+}
 
 // 获取省市区数据函数
 const getCityData = () => {
