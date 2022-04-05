@@ -20,6 +20,8 @@
         </div>
         <div class="spec">
           <GoodsName :goods="goods" />
+          <!-- SKU组件 -->
+          <GoodsSku :goods="goods" />
         </div>
       </div>
       <!-- 商品推荐 -->
@@ -49,6 +51,7 @@ import { findProduct } from '@/api/product'
 import GoodsImage from './components/goods-image.vue'
 import GoodsSales from './components/goods-sales.vue'
 import GoodsName from './components/goods-name.vue'
+import GoodsSku from './components/goods-sku.vue'
 const route = useRoute()
 
 // 获取商品详情
