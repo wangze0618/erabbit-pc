@@ -25,6 +25,7 @@
 </template>
 
 <script setup>
+import powerset from '@/vender/power-set'
 // 定义props
 const props = defineProps({
   goods: {
@@ -32,6 +33,29 @@ const props = defineProps({
     default: () => ({}),
   },
 })
+const spliter = '★'
+const pathMap = {}
+
+// 得到一个路径字典对象
+const getPathMap = (skus) => {
+  skus.forEach((sku) => {
+    if (sku.inventory > 0) {
+      const valueArr = sku.specs.map((val) => val.valueName)
+      const valuePowerArr = powerset(valueArr)
+      valuePowerArr.forEach((arr) => {
+        const key = arr.join(spliter)
+        // 给pathMap设置数据
+        if (pathMap[key]) {
+          pathMap[key].push(sku.id)
+        } else {
+          pathMap[key] = [sku.id]
+        }
+      })
+    }
+  })
+  return pathMap
+}
+console.log(getPathMap(props.goods.skus))
 // 实现取消/选中功能
 const changeSku = (item, val) => {
   if (val.selected) {
