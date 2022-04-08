@@ -21,7 +21,9 @@
         <div class="spec">
           <GoodsName :goods="goods" />
           <!-- SKU组件 -->
-          <GoodsSku :goods="goods" />
+          <GoodsSku :goods="goods" skuId="4001232" @change="changeSku" />
+          <!-- 数量选择组件 -->
+          <XtxNumberbox :count="count" />
         </div>
       </div>
       <!-- 商品推荐 -->
@@ -52,8 +54,16 @@ import GoodsImage from './components/goods-image.vue'
 import GoodsSales from './components/goods-sales.vue'
 import GoodsName from './components/goods-name.vue'
 import GoodsSku from './components/goods-sku.vue'
+import XtxNumberbox from '../../components/library/xtx-numberbox.vue'
 const route = useRoute()
 
+const changeSku = (sku) => {
+  if (sku.skuId) {
+    goods.value.price = sku.price
+    goods.value.oldPrice = sku.oldPrice
+    goods.value.inventory = sku.inventory
+  }
+}
 // 获取商品详情
 const useGoods = () => {
   const goods = ref(null)
@@ -74,6 +84,9 @@ const useGoods = () => {
   return goods
 }
 const goods = useGoods()
+
+// 默认选择的数量
+let count = ref(1)
 </script>
 
 <style scoped lang="less">

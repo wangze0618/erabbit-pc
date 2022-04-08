@@ -5,7 +5,7 @@
       <dd>
         <template v-for="val in item.values" :key="val.name">
           <img
-            :class="{ selected: val.selected }"
+            :class="{ selected: val.selected, disabled: val.disabled }"
             v-if="val.picture"
             :src="val.picture"
             :alt="val.name"
@@ -13,7 +13,7 @@
             @click="changeSku(item, val)"
           />
           <span
-            :class="{ selected: val.selected }"
+            :class="{ selected: val.selected, disabled: val.disabled }"
             @click="changeSku(item, val)"
             v-else
             >{{ val.name }}</span
@@ -26,18 +26,37 @@
 
 <script setup>
 import powerset from '@/vender/power-set'
+
 // 定义props
 const props = defineProps({
   goods: {
     type: Object,
     default: () => ({}),
   },
+  skuId: {
+    type: String,
+    default: '',
+  },
 })
+const emit = defineEmits(['change'])
 const spliter = '★'
-const pathMap = {}
 
+const initSelectedStatus = (goods, skuId) => {
+  // 找出sku的信息
+  // 遍历每一个按钮 按钮的值和sku记录的值相同
+  const sku = goods.skus.find((sku) => sku.id === skuId)
+  if (sku) {
+    goods.specs.forEach((spec, i) => {
+      const value = sku.specs[i].valueName
+      spec.values.forEach((val) => {
+        val.selected = val.name === value
+      })
+    })
+  }
+}
 // 得到一个路径字典对象
 const getPathMap = (skus) => {
+  const pathMap = {}
   skus.forEach((sku) => {
     if (sku.inventory > 0) {
       const valueArr = sku.specs.map((val) => val.valueName)
@@ -55,9 +74,36 @@ const getPathMap = (skus) => {
   })
   return pathMap
 }
-console.log(getPathMap(props.goods.skus))
+const pathMap = getPathMap(props.goods.skus)
+const getSelectedValues = (specs) => {
+  const arr = []
+  specs.forEach((item) => {
+    const selectedVal = item.values.find((val) => val.selected)
+    arr.push(selectedVal ? selectedVal.name : undefined)
+  })
+  return arr
+}
+initSelectedStatus(props.goods, props.skuId)
+// 更新按钮禁用状态
+const updateDisabledStatus = (specs, pathMap) => {
+  specs.forEach((spec, i) => {
+    const selectedArr = getSelectedValues(specs)
+    spec.values.forEach((val) => {
+      // 已经选中的按钮不用判断
+      if (val.name === selectedArr[i]) return false
+      // 未选中的替换对应的值
+      selectedArr[i] = val.name
+      // 过滤无效值得到key
+      const key = selectedArr.filter((v) => v).join(spliter)
+      // 设置禁用状态
+      val.disabled = !pathMap[key]
+    })
+  })
+}
+updateDisabledStatus(props.goods.specs, pathMap)
 // 实现取消/选中功能
 const changeSku = (item, val) => {
+  if (val.disabled) return
   if (val.selected) {
     val.selected = false
   } else {
@@ -66,6 +112,24 @@ const changeSku = (item, val) => {
     })
     val.selected = true
   }
+}
+// 触发change事件将sku数据传递出去
+const selectedArr = getSelectedValues(props.goods.specs).filter((v) => v)
+if (selectedArr.length === props.goods.specs.length) {
+  const skuIds = pathMap[selectedArr.join(spliter)]
+  const sku = props.goods.skus.find((sku) => sku.id === skuIds[0])
+  // 传递
+  emit('change', {
+    skuId: sku.id,
+    price: sku.price,
+    oldPrice: sku.oldPrice,
+    inventory: sku.inventory,
+    specsText: sku.specs
+      .reduce((p, n) => `${p} ${n.name}：${n.valueName}`, '')
+      .replace(' ', ''),
+  })
+} else {
+  emit('change', {})
 }
 </script>
 <style scoped lang="less">
