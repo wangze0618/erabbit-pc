@@ -21,9 +21,18 @@
         <div class="spec">
           <GoodsName :goods="goods" />
           <!-- SKU组件 -->
-          <GoodsSku :goods="goods" skuId="4001232" @change="changeSku" />
+          <GoodsSku :goods="goods" @change="changeSku" />
           <!-- 数量选择组件 -->
-          <XtxNumberbox :count="count" />
+          <XtxNumberbox
+            :count="count"
+            :max="goods.inventory"
+            @change="count = $event"
+            label="数量"
+          />
+          <!-- 按钮组件 -->
+          <XtxButton type="primary" size="large" style="margin-top: 20px"
+            >加入购物车</XtxButton
+          >
         </div>
       </div>
       <!-- 商品推荐 -->
@@ -55,6 +64,7 @@ import GoodsSales from './components/goods-sales.vue'
 import GoodsName from './components/goods-name.vue'
 import GoodsSku from './components/goods-sku.vue'
 import XtxNumberbox from '../../components/library/xtx-numberbox.vue'
+import XtxButton from '@/components/library/xtx-button.vue'
 const route = useRoute()
 
 const changeSku = (sku) => {
@@ -63,6 +73,7 @@ const changeSku = (sku) => {
     goods.value.oldPrice = sku.oldPrice
     goods.value.inventory = sku.inventory
   }
+  console.log(sku)
 }
 // 获取商品详情
 const useGoods = () => {

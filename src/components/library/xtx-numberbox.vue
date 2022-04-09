@@ -1,6 +1,7 @@
 <template>
   <div class="xtx-numbox">
-    <div class="label">数量</div>
+    <div class="label" v-if="label">{{ label }}</div>
+
     <div class="numbox">
       <a href="javascript:;" @click="changeNum(-1)">-</a>
       <input type="text" readonly :value="count" />
@@ -13,17 +14,32 @@
 import { ref } from 'vue'
 const props = defineProps({
   count: {
-    type: [Number, String],
+    type: Number,
     required: true,
+    default: 1,
+  },
+  min: {
+    type: Number,
+    default: 1,
+  },
+  max: {
+    type: Number,
+    default: 10,
+  },
+  label: {
+    type: String,
+    default: '',
   },
 })
 let newVal = props.count
-const emit = defineEmits(['changeCount'])
+const emit = defineEmits(['change'])
 
 // 数量改变
 const changeNum = (num) => {
   newVal += num
-  console.log(newVal)
+  if (newVal < props.min || newVal > props.max) return
+  // 通知父组件
+  emit('change', newVal)
 }
 </script>
 
