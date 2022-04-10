@@ -36,17 +36,20 @@
         </div>
       </div>
       <!-- 商品推荐 -->
-      <GoodsRelevant />
+      <GoodsRelevant></GoodsRelevant>
       <!-- 商品详情 -->
       <div class="goods-footer">
         <div class="goods-article">
           <!-- 商品+评价 -->
-          <div class="goods-tabs"></div>
+          <GoodsTabs></GoodsTabs>
           <!-- 注意事项 -->
           <div class="goods-warn"></div>
         </div>
-        <!-- 24热榜+专题推荐 -->
-        <div class="goods-aside"></div>
+        <!-- 24热榜+周热销榜 -->
+        <div class="goods-aside">
+          <GoodsHot></GoodsHot>
+          <GoodsHot :type="2"></GoodsHot>
+        </div>
       </div>
     </div>
   </div>
@@ -56,7 +59,6 @@
 import { nextTick, ref, watch } from 'vue'
 import XtxBread from '@/components/library/xtx-bread.vue'
 import XtxBreadItem from '@/components/library/xtx-bread-item.vue'
-import GoodsRelevant from './components/goods-relevant'
 import { useRoute } from 'vue-router'
 import { findProduct } from '@/api/product'
 import GoodsImage from './components/goods-image.vue'
@@ -65,6 +67,9 @@ import GoodsName from './components/goods-name.vue'
 import GoodsSku from './components/goods-sku.vue'
 import XtxNumberbox from '../../components/library/xtx-numberbox.vue'
 import XtxButton from '@/components/library/xtx-button.vue'
+import GoodsRelevant from './components/goods-relevant.vue'
+import GoodsTabs from './components/goods-tabs.vue'
+import GoodsHot from './components/goods-hot.vue'
 const route = useRoute()
 
 const changeSku = (sku) => {
