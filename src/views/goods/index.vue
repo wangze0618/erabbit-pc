@@ -43,7 +43,7 @@
           <!-- 商品+评价 -->
           <GoodsTabs></GoodsTabs>
           <!-- 注意事项 -->
-          <div class="goods-warn"></div>
+          <GoodsWarn></GoodsWarn>
         </div>
         <!-- 24热榜+周热销榜 -->
         <div class="goods-aside">
@@ -56,7 +56,7 @@
 </template>
 
 <script setup>
-import { nextTick, ref, watch } from 'vue'
+import { nextTick, provide, ref, watch } from 'vue'
 import XtxBread from '@/components/library/xtx-bread.vue'
 import XtxBreadItem from '@/components/library/xtx-bread-item.vue'
 import { useRoute } from 'vue-router'
@@ -70,6 +70,7 @@ import XtxButton from '@/components/library/xtx-button.vue'
 import GoodsRelevant from './components/goods-relevant.vue'
 import GoodsTabs from './components/goods-tabs.vue'
 import GoodsHot from './components/goods-hot.vue'
+import GoodsWarn from './components/goods-warn.vue'
 const route = useRoute()
 
 const changeSku = (sku) => {
@@ -78,7 +79,6 @@ const changeSku = (sku) => {
     goods.value.oldPrice = sku.oldPrice
     goods.value.inventory = sku.inventory
   }
-  console.log(sku)
 }
 // 获取商品详情
 const useGoods = () => {
@@ -103,6 +103,7 @@ const goods = useGoods()
 
 // 默认选择的数量
 let count = ref(1)
+provide('goods', goods)
 </script>
 
 <style scoped lang="less">
