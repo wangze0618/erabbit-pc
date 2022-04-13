@@ -7,6 +7,9 @@
 import axios from 'axios'
 import store from '@/store'
 import router from '@/router'
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
+
 // 导出基准地址 原因是：
 // 其他地方不是通过axios发请求的地方也用上基准地址
 export const baseURL = 'https://apipc-xiaotuxian-front.itheima.net/'
@@ -19,6 +22,7 @@ const instance = axios.create({
 // 请求拦截器
 instance.interceptors.request.use(
   (config) => {
+    NProgress.start()
     // 携带 token
     // 1. 获取用户信息对象
     const { profile } = store.state.user
@@ -37,6 +41,7 @@ instance.interceptors.request.use(
 // 响应拦截器
 instance.interceptors.response.use(
   (response) => {
+    NProgress.done()
     return response.data
   },
   (error) => {
@@ -55,6 +60,7 @@ instance.interceptors.response.use(
       // js模块中：router.currentRoute.value.fullPath就是当前路由地址
       // encodeURIComponent 转换URI编码 防止解析地址出现问题
     }
+    NProgress.done()
     return Promise.reject(error)
   }
 )

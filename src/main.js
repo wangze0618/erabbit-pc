@@ -7,7 +7,6 @@ import 'normalize.css'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap/dist/js/bootstrap.bundle.min'
 import '@/assets/styles/common.less'
-// import 'am[fe-flexible'
 
 // 导入UI组件库
 import UI from '@/components/library/index'

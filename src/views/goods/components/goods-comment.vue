@@ -20,7 +20,7 @@
             v-for="(item, index) in commentInfo.tags"
             :key="item.title"
             :class="{ active: currIndex == index }"
-            @click="currIndex = index"
+            @click="changeTag(index)"
             >{{ item.title }}（{{ item.tagCount }}）</a
           >
         </div>
@@ -28,9 +28,24 @@
     </div>
     <div class="sort">
       <span>排序：</span>
-      <a href="javascript:;" class="active">默认</a>
-      <a href="javascript:;">最新</a>
-      <a href="javascript:;">最热</a>
+      <a
+        @click="changeSort('null')"
+        href="javascript:;"
+        :class="{ active: reqParams.sortField === null }"
+        >默认</a
+      >
+      <a
+        @click="changeSort('createTime')"
+        href="javascript:;"
+        :class="{ active: reqParams.sortField === 'createTime' }"
+        >最新</a
+      >
+      <a
+        @click="changeSort('praiseCount')"
+        href="javascript:;"
+        :class="{ active: reqParams.sortField === 'praiseCount' }"
+        >最热</a
+      >
     </div>
     <!-- 评价列表 -->
     <div class="list">
@@ -67,29 +82,72 @@
   </div>
 </template>
 <script setup>
-import { findGoodsCommentInfo } from '@/api/product'
-import { ref, onMounted, inject } from 'vue'
+import { findGoodsCommentInfo, findGoodsCommentList } from '@/api/product'
+import { ref, onMounted, inject, reactive, watch } from 'vue'
 
 // 评论数据
 const commentInfo = ref('null')
 const goods = inject('goods')
+// 准备筛选条件数据
+const reqParams = reactive({
+  page: 1,
+  pageSize: 10,
+  hasPicture: null,
+  tag: null,
+  // 排序方式 praiseCount热度 | createTime最新
+  sortField: null,
+})
 // 激活的tag初识索引
 const currIndex = ref(0)
+const changeTag = (index) => {
+  currIndex.value = index
+  const tag = commentInfo.value.tags[index]
+  if (tag.type == 'all') {
+    reqParams.hasPicture = null
+    reqParams.tag = null
+  } else if (tag.type == 'img') {
+    reqParams.hasPicture = true
+    reqParams.tag = null
+  } else {
+    reqParams.hasPicture = null
+    reqParams.tag = tag.title
+  }
+  reqParams.page = 1
+}
 // 获取数据
 onMounted(async () => {
   const { result } = await findGoodsCommentInfo(goods.id)
   result.tags.unshift({
     title: '有图',
     tagCount: result.hasPictureCount,
+    type: 'img',
   })
   result.tags.unshift({
     title: '全部评价',
     tagCount: result.evaluateCount,
+    type: 'all',
   })
   commentInfo.value = result
 })
-// 准备筛选条件
-const
+
+// 更改排序
+const changeSort = (field) => {
+  reqParams.page = 1
+  reqParams.sortField = field
+}
+
+// 评论列表数据
+const commentList = ref('null')
+watch(
+  reqParams,
+  async () => {
+    reqParams.page = 1
+    const { result } = await findGoodsCommentList(goods.id, reqParams)
+    commentList.value = result.items
+    console.log(commentList.value)
+  },
+  { immediate: true }
+)
 </script>
 <style scoped lang="less">
 .list {
