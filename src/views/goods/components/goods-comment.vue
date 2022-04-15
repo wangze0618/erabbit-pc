@@ -49,7 +49,7 @@
       >
     </div>
     <!-- 评价列表 -->
-    <div class="list">
+    <div class="list" v-if="commentList">
       <div class="item" v-for="item in commentList" :key="item.id">
         <div class="user">
           <img :src="item.member.avatar" alt="" />
@@ -63,6 +63,11 @@
           <div class="text">
             {{ item.content }}
           </div>
+          <!-- 评论图片组件 -->
+          <GoodsCommentImage
+            v-if="item.pictures.length"
+            :picture="item.pictures"
+          />
           <div class="time">
             <span>2020-10-10 10:11:22</span>
             <span class="zan"
@@ -79,6 +84,7 @@ import { findGoodsCommentInfo, findGoodsCommentList } from '@/api/product'
 import { ref, onMounted, inject, reactive, watch, onBeforeMount } from 'vue'
 import XtxStar from '@/components/library/xtx-star.vue'
 import XtxLoading from '@/components/library/xtx-loading.vue'
+import GoodsCommentImage from './goods-comment-image.vue'
 
 const isShow = ref(false)
 

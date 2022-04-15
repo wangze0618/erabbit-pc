@@ -53,6 +53,7 @@
       </div>
     </div>
   </div>
+  <XtxLoading v-else></XtxLoading>
 </template>
 
 <script setup>
@@ -71,6 +72,7 @@ import GoodsRelevant from './components/goods-relevant.vue'
 import GoodsTabs from './components/goods-tabs.vue'
 import GoodsHot from './components/goods-hot.vue'
 import GoodsWarn from './components/goods-warn.vue'
+import XtxLoading from '@/components/library/xtx-loading.vue'
 const route = useRoute()
 
 const changeSku = (sku) => {

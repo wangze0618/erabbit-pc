@@ -20,8 +20,7 @@ export const findGoodsHot = (id, type = 1, limit = 3) => {
 export const findGoodsCommentInfo = (id) => {
   return request(
     `https://mock.boxuegu.com/mock/1175/goods/${id}/evaluate`,
-    'get',
-    { id }
+    'get'
   )
 }
 
@@ -30,6 +29,6 @@ export const findGoodsCommentList = (id, params) => {
   return request(
     `https://mock.boxuegu.com/mock/1175/goods/${id}/evaluate/page`,
     'get',
-    { id, ...params }
+    params
   )
 }
