@@ -15,7 +15,7 @@
     "core-js": "^3.8.3",
     "normalize.css": "^8.0.1",
     "nprogress": "^0.2.0",
-    "vue": "^3.2.13",
+    "vue": "^3.2.32",
     "vue-router": "^4.0.3",
     "vuex": "^4.0.0",
     "vuex-persistedstate": "^4.1.0"

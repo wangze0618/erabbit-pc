@@ -1,5 +1,6 @@
 <template>
-  <div class="goods-comment">
+  <XtxLoading v-if="isShow"></XtxLoading>
+  <div v-else class="goods-comment">
     <!-- 评价头部 -->
     <div class="head">
       <div class="data">
@@ -49,32 +50,24 @@
     </div>
     <!-- 评价列表 -->
     <div class="list">
-      <div class="item">
+      <div class="item" v-for="item in commentList" :key="item.id">
         <div class="user">
-          <img
-            src="http://zhoushugang.gitee.io/erabbit-client-pc-static/uploads/avatar_1.png"
-            alt=""
-          />
-          <span>兔****m</span>
+          <img :src="item.member.avatar" alt="" />
+          <span>{{ formNickname(item.member.nickname) }}</span>
         </div>
         <div class="body">
           <div class="score">
-            <i class="iconfont icon-wjx01"></i>
-            <i class="iconfont icon-wjx01"></i>
-            <i class="iconfont icon-wjx01"></i>
-            <i class="iconfont icon-wjx01"></i>
-            <i class="iconfont icon-wjx02"></i>
-            <span class="attr">颜色：黑色 尺码：M</span>
+            <XtxStar :star="item.score"></XtxStar>
+            <span class="attr">{{ formatSpecs(item.orderInfo.specs) }}</span>
           </div>
           <div class="text">
-            网易云app上这款耳机非常不错 新人下载网易云购买这款耳机优惠大
-            而且耳机🎧确实正品 音质特别好 戴上这款耳机
-            听音乐看电影效果声音真是太棒了 无线方便 小盒自动充电
-            最主要是质量好音质棒 想要买耳机的放心拍 音效巴巴滴 老棒了
+            {{ item.content }}
           </div>
           <div class="time">
             <span>2020-10-10 10:11:22</span>
-            <span class="zan"><i class="iconfont icon-dianzan"></i>100</span>
+            <span class="zan"
+              ><i class="iconfont icon-dianzan"></i>{{ item.praiseCount }}</span
+            >
           </div>
         </div>
       </div>
@@ -83,7 +76,11 @@
 </template>
 <script setup>
 import { findGoodsCommentInfo, findGoodsCommentList } from '@/api/product'
-import { ref, onMounted, inject, reactive, watch } from 'vue'
+import { ref, onMounted, inject, reactive, watch, onBeforeMount } from 'vue'
+import XtxStar from '@/components/library/xtx-star.vue'
+import XtxLoading from '@/components/library/xtx-loading.vue'
+
+const isShow = ref(false)
 
 // 评论数据
 const commentInfo = ref('null')
@@ -97,6 +94,7 @@ const reqParams = reactive({
   // 排序方式 praiseCount热度 | createTime最新
   sortField: null,
 })
+
 // 激活的tag初识索引
 const currIndex = ref(0)
 const changeTag = (index) => {
@@ -116,6 +114,7 @@ const changeTag = (index) => {
 }
 // 获取数据
 onMounted(async () => {
+  isShow.value = true
   const { result } = await findGoodsCommentInfo(goods.id)
   result.tags.unshift({
     title: '有图',
@@ -128,8 +127,8 @@ onMounted(async () => {
     type: 'all',
   })
   commentInfo.value = result
+  isShow.value = false
 })
-
 // 更改排序
 const changeSort = (field) => {
   reqParams.page = 1
@@ -141,13 +140,20 @@ const commentList = ref('null')
 watch(
   reqParams,
   async () => {
-    reqParams.page = 1
+    isShow.value = true
     const { result } = await findGoodsCommentList(goods.id, reqParams)
     commentList.value = result.items
-    console.log(commentList.value)
+    isShow.value = false
   },
   { immediate: true }
 )
+// 定义转换数据的函数
+const formatSpecs = (specs) => {
+  return specs.reduce((p, c) => `${p} ${c.name}: ${c.nameValue}`, '').trim()
+}
+const formNickname = (nickname) => {
+  return nickname.replaceAll(nickname.slice(1, nickname.length - 1), '****')
+}
 </script>
 <style scoped lang="less">
 .list {
@@ -173,10 +179,10 @@ watch(
       flex: 1;
       .score {
         line-height: 40px;
-        .iconfont {
-          color: #ff9240;
-          padding-right: 3px;
-        }
+        // .iconfont {
+        //   color: #ff9240;
+        //   padding-right: 3px;
+        // }
         .attr {
           padding-left: 10px;
           color: #666;
