@@ -66,7 +66,7 @@
           <!-- 评论图片组件 -->
           <GoodsCommentImage
             v-if="item.pictures.length"
-            :picture="item.pictures"
+            :pictures="item.pictures"
           />
           <div class="time">
             <span>2020-10-10 10:11:22</span>
@@ -77,6 +77,8 @@
         </div>
       </div>
     </div>
+    <!-- 分页组件 -->
+    <XtxPagination />
   </div>
 </template>
 <script setup>
@@ -85,6 +87,7 @@ import { ref, onMounted, inject, reactive, watch, onBeforeMount } from 'vue'
 import XtxStar from '@/components/library/xtx-star.vue'
 import XtxLoading from '@/components/library/xtx-loading.vue'
 import GoodsCommentImage from './goods-comment-image.vue'
+import XtxPagination from '@/components/library/xtx-pagination.vue'
 
 const isShow = ref(false)
 
@@ -121,7 +124,7 @@ const changeTag = (index) => {
 // 获取数据
 onMounted(async () => {
   isShow.value = true
-  const { result } = await findGoodsCommentInfo(goods.id)
+  const { result } = await findGoodsCommentInfo(goods.value.id)
   result.tags.unshift({
     title: '有图',
     tagCount: result.hasPictureCount,
@@ -147,7 +150,7 @@ watch(
   reqParams,
   async () => {
     isShow.value = true
-    const { result } = await findGoodsCommentList(goods.id, reqParams)
+    const { result } = await findGoodsCommentList(goods.value.id, reqParams)
     commentList.value = result.items
     isShow.value = false
   },
