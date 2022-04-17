@@ -27,7 +27,7 @@
         </div>
       </div>
     </div>
-    <div class="sort">
+    <div class="sort" v-if="commentInfo">
       <span>排序：</span>
       <a
         @click="changeSort('null')"
@@ -71,14 +71,21 @@
           <div class="time">
             <span>2020-10-10 10:11:22</span>
             <span class="zan"
-              ><i class="iconfont icon-dianzan"></i>{{ item.praiseCount }}</span
+              ><i class="iconfont icon-dianzan"></i>
+              {{ item.praiseCount }}</span
             >
           </div>
         </div>
       </div>
     </div>
     <!-- 分页组件 -->
-    <XtxPagination />
+    <XtxPagination
+      v-if="total"
+      :total="total"
+      :page-size="reqParams.pageSize"
+      :current-page="reqParams.page"
+      @current-change="changePager"
+    />
   </div>
 </template>
 <script setup>
@@ -122,9 +129,11 @@ const changeTag = (index) => {
   reqParams.page = 1
 }
 // 获取数据
+const total = ref(0)
 onMounted(async () => {
   isShow.value = true
   const { result } = await findGoodsCommentInfo(goods.value.id)
+  total.value = result.counts
   result.tags.unshift({
     title: '有图',
     tagCount: result.hasPictureCount,
@@ -162,6 +171,9 @@ const formatSpecs = (specs) => {
 }
 const formNickname = (nickname) => {
   return nickname.replaceAll(nickname.slice(1, nickname.length - 1), '****')
+}
+const changePager = (newPage) => {
+  reqParams.page = newPage
 }
 </script>
 <style scoped lang="less">
