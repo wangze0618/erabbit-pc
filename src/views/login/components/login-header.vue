@@ -25,7 +25,7 @@ a {
   border-bottom: 1px solid #e4e4e4;
   .container {
     display: flex;
-    align-items: flex-end;
+    align-items: center;
     justify-content: space-between;
   }
   .logo {
@@ -43,13 +43,13 @@ a {
     flex: 1;
     font-size: 24px;
     font-weight: normal;
-    margin-bottom: 38px;
+    // margin-bottom: 38px;
     margin-left: 20px;
     color: #666;
   }
   .entry {
     width: 120px;
-    margin-bottom: 38px;
+    // margin-bottom: 38px;
     font-size: 16px;
     i {
       font-size: 14px;

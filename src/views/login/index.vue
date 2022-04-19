@@ -18,7 +18,7 @@
           >
         </nav>
         <!-- 账号登录&扫码登录 -->
-        <div v-if="activeName === 'account'" class="account-box">表单</div>
+        <LoginForm v-if="activeName === 'account'">表单</LoginForm>
         <!-- 二维码 -->
         <div v-if="activeName === 'qrcode'" class="qrcode-box">
           <img src="@/assets/images/qrcode.jpg" alt="" />
@@ -26,7 +26,7 @@
         </div>
       </div>
     </section>
-    <LoginFooter></LoginFooter>
+    <LoginFooter />
   </div>
 </template>
 
@@ -34,6 +34,7 @@
 import { ref } from 'vue'
 import LoginHeader from './components/login-header.vue'
 import LoginFooter from './components/login-footer.vue'
+import LoginForm from './components/login-form.vue'
 
 const activeName = ref('account')
 const changeTab = (newTab) => {
