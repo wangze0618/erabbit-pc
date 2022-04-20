@@ -113,6 +113,7 @@
         <a href="javascript:;">免费注册</a>
       </div>
     </div>
+    <XtxMessage text="啊啊啊"></XtxMessage>
   </div>
 </template>
 <script setup>
@@ -120,6 +121,7 @@ import { reactive, ref, watch } from 'vue'
 import XtxCheckbox from '@/components/library/xtx-checkbox.vue'
 import { Form, Field } from 'vee-validate'
 import schema from '@/utils/vee-validation'
+import XtxMessage from '@/components/library/xtx-message.vue'
 // 是否短信登录
 const isMsgLogin = ref(false)
 
