@@ -8,7 +8,13 @@
         <i class="iconfont icon-msg"></i> 使用短信登录
       </a>
     </div>
-    <Form class="form" v-slot="{ errors }" :validation-schema="mySchema">
+    <Form
+      ref="formTarget"
+      class="form"
+      autocomplete="off"
+      v-slot="{ errors }"
+      :validation-schema="mySchema"
+    >
       <!-- 密码登录 -->
       <template v-if="!isMsgLogin">
         <div class="form-item">
@@ -64,6 +70,7 @@
           <div class="input">
             <i class="iconfont icon-code"></i>
             <Field
+              autocomplete="off"
               name="code"
               v-model="form.code"
               type="password"
@@ -79,14 +86,22 @@
       </template>
       <div class="form-item">
         <div class="agree">
-          <XtxCheckbox v-model="form.isAgree" />
+          <Field
+            :as="XtxCheckbox"
+            name="isAgree"
+            :modelValue="form.isAgree"
+            @updateValue="form.isAgree = $event"
+          />
           <span>我已同意</span>
           <a href="javascript:;">《隐私条款》</a>
           <span>和</span>
           <a href="javascript:;">《服务条款》</a>
         </div>
+        <div v-if="errors.isAgree" class="error">
+          <i class="iconfont icon-warning" />{{ errors.isAgree }}
+        </div>
       </div>
-      <a href="javascript:;" class="btn">登录</a>
+      <a href="javascript:;" @click="loginValidate" class="btn">登录</a>
     </Form>
     <div class="action">
       <img
@@ -101,7 +116,7 @@
   </div>
 </template>
 <script setup>
-import { reactive, ref } from 'vue'
+import { reactive, ref, watch } from 'vue'
 import XtxCheckbox from '@/components/library/xtx-checkbox.vue'
 import { Form, Field } from 'vee-validate'
 import schema from '@/utils/vee-validation'
@@ -125,6 +140,21 @@ const mySchema = {
   password: schema.password,
   mobile: schema.mobile,
   code: schema.code,
+  isAgree: schema.isAgree,
+}
+
+const formTarget = ref(null)
+// 监听登录方式变化，清空输入框的内容
+watch(isMsgLogin, () => {
+  form.account = null
+  form.password = null
+  form.mobile = null
+  form.code = null
+})
+// 点击 登录 按钮进行表单验证
+const loginValidate = async () => {
+  const result = await formTarget.value.validate()
+  console.log(result)
 }
 </script>
 
@@ -166,6 +196,7 @@ const mySchema = {
           height: 36px;
           line-height: 36px;
           width: 100%;
+          transition: all 0.5s;
           &.error {
             border-color: @priceColor;
           }
