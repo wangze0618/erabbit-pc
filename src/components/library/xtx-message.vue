@@ -1,12 +1,15 @@
 <template>
-  <div class="xtx-message" :style="style[type]">
-    <!-- 上面绑定的是样式 -->
-    <!-- 不同提示图标会变 -->
-    <i class="iconfont" :class="[style[type].icon]"></i>
-    <span class="text">{{ text }}</span>
-  </div>
+  <Transition name="down">
+    <div class="xtx-message" v-if="isShow" :style="style[type]">
+      <!-- 上面绑定的是样式 -->
+      <!-- 不同提示图标会变 -->
+      <i class="iconfont" :class="[style[type].icon]"></i>
+      <span class="text">{{ text }}</span>
+    </div>
+  </Transition>
 </template>
 <script setup>
+import { ref, onMounted, onUnmounted } from 'vue'
 const props = defineProps({
   text: {
     type: String,
@@ -17,6 +20,10 @@ const props = defineProps({
     // warn 警告  error 错误  success 成功
     default: 'warn',
   },
+})
+const isShow = ref(false)
+onMounted(async () => {
+  isShow.value = true
 })
 
 // 定义一个对象，包含三种情况的样式，对象key就是类型字符串
@@ -42,6 +49,35 @@ const style = {
 }
 </script>
 <style scoped lang="less">
+// .down {
+//   &-enter {
+//     &-from {
+//       transform: translate3d(0, -75px, 0);
+//       opacity: 0;
+//     }
+//     &-active {
+//       transition: all 0.5s;
+//     }
+//     &-to {
+//       transform: none;
+//       opacity: 1;
+//     }
+//   }
+// }
+.down-enter-active,
+.down-leave-active {
+  transition: all 0.5s;
+}
+.down-enter-from,
+.down-leave-to {
+  transform: translateY(-75px);
+  opacity: 0;
+}
+.down-enter-to,
+.down-leave-from {
+  transform: none;
+  opacity: 1;
+}
 .xtx-message {
   width: 300px;
   height: 50px;

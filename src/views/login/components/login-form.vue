@@ -113,7 +113,6 @@
         <a href="javascript:;">免费注册</a>
       </div>
     </div>
-    <XtxMessage text="啊啊啊"></XtxMessage>
   </div>
 </template>
 <script setup>
@@ -121,7 +120,7 @@ import { reactive, ref, watch } from 'vue'
 import XtxCheckbox from '@/components/library/xtx-checkbox.vue'
 import { Form, Field } from 'vee-validate'
 import schema from '@/utils/vee-validation'
-import XtxMessage from '@/components/library/xtx-message.vue'
+import Message from '@/components/library/Message'
 // 是否短信登录
 const isMsgLogin = ref(false)
 
@@ -156,6 +155,7 @@ watch(isMsgLogin, () => {
 // 点击 登录 按钮进行表单验证
 const loginValidate = async () => {
   const result = await formTarget.value.validate()
+  Message({ type: 'error', text: 'error!!!' })
   console.log(result)
 }
 </script>
@@ -243,7 +243,7 @@ const loginValidate = async () => {
       height: 40px;
       color: #fff;
       text-align: center;
-      line-height: 40px;
+      line-height: 27.5px;
       background: @xtxColor;
       &.disabled {
         background: #cfcdcd;

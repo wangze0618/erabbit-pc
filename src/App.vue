@@ -2,6 +2,7 @@
   <!-- 一级路由 -->
   <router-view></router-view>
 </template>
+<script setup></script>
 <style lang="less">
 #nprogress {
   .bar {
