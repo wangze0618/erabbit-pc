@@ -121,6 +121,10 @@ import XtxCheckbox from '@/components/library/xtx-checkbox.vue'
 import { Form, Field } from 'vee-validate'
 import schema from '@/utils/vee-validation'
 import Message from '@/components/library/Message'
+import { userAccountLogin } from '@/api/user'
+import { useStore } from 'vuex'
+import { useRoute } from 'vue-router'
+import { useRouter } from 'vue-router'
 // 是否短信登录
 const isMsgLogin = ref(false)
 
@@ -153,10 +157,46 @@ watch(isMsgLogin, () => {
   form.code = null
 })
 // 点击 登录 按钮进行表单验证
+const store = useStore()
+const route = useRoute()
+const router = useRouter()
 const loginValidate = async () => {
-  const result = await formTarget.value.validate()
-  Message({ type: 'error', text: 'error!!!' })
-  console.log(result)
+  const valid = await formTarget.value.validate()
+  /*
+    1. 准备API来进行登录
+    2. 调用API函数
+    3. 成功：存储用户信息 + 跳转至来源页或首页 + 消息提示
+    4. 失败：消息提示
+  */
+  if (valid) {
+    if (isMsgLogin.value) {
+      // 手机验证码登录
+    } else {
+      // 账号密码登录
+      try {
+        const { result } = await userAccountLogin(form)
+        const { id, account, avatar, mobile, nickname, token } = result
+        store.commit('user/setUser', {
+          id,
+          account,
+          avatar,
+          mobile,
+          nickname,
+          token,
+        })
+        // 进行路由跳转
+        router.push(route.query.redirectUrl || '/')
+        Message({ type: 'success', text: '登录成功' })
+      } catch (error) {
+        if (error.response.data) {
+          Message({
+            type: 'error',
+            text: error.response.data.message || '登录失败',
+          })
+        }
+      }
+    }
+  }
 }
 </script>
 

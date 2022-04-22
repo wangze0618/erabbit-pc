@@ -19,6 +19,7 @@ export default ({ type, text }) => {
   const vnode = createVNode(XtxMessage, { type, text })
   // 4、 将虚拟节点渲染在容器中
   render(vnode, div)
+  // 销毁
   let timer = null
   clearTimeout(timer)
   timer = setTimeout(() => {
