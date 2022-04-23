@@ -59,6 +59,7 @@
               v-model="form.mobile"
               type="text"
               placeholder="请输入手机号"
+              maxlength="11"
               :class="{ error: errors.mobile }"
             />
           </div>
@@ -77,7 +78,8 @@
               placeholder="请输入验证码"
               :class="{ error: errors.code }"
             />
-            <span class="code">发送验证码</span>
+            <span @click="send()" v-if="!isCount" class="code">发送验证码</span>
+            <span v-else class="code disable">等待{{ time }}秒后重试</span>
           </div>
           <div v-if="errors.code" class="error">
             <i class="iconfont icon-warning" />{{ errors.code }}
@@ -121,10 +123,15 @@ import XtxCheckbox from '@/components/library/xtx-checkbox.vue'
 import { Form, Field } from 'vee-validate'
 import schema from '@/utils/vee-validation'
 import Message from '@/components/library/Message'
-import { userAccountLogin } from '@/api/user'
+import { userAccountLogin, userMobileLoginMsg } from '@/api/user'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 import { useRouter } from 'vue-router'
+
+// 倒计时
+const time = ref(60)
+const isCount = ref(false)
+
 // 是否短信登录
 const isMsgLogin = ref(false)
 
@@ -198,6 +205,34 @@ const loginValidate = async () => {
     }
   }
 }
+
+// 点击发送验证码时检验手机号
+const send = async () => {
+  const valid = mySchema.mobile(form.mobile)
+  if (valid == '手机号格式错误' || valid == '请输入手机号') {
+    // 失败 就使用vee的setFieldError(字段，错误信息)
+    formTarget.value.setFieldError('mobile', valid)
+  } else {
+    // 正确 发送请求
+    try {
+      isCount.value = true
+      let countInterval = setInterval(() => {
+        time.value--
+        if (time.value <= 0) {
+          clearInterval(countInterval)
+          isCount.value = false
+          time.value = 60
+        }
+      }, 1000)
+      await userMobileLoginMsg(form.mobile)
+      Message({ type: 'success', text: '发送成功' })
+    } catch (error) {
+      if (error.response.data) {
+        Message({ type: 'error', text: error.response.data.message })
+      }
+    }
+  }
+}
 </script>
 
 <style lang="less" scoped>
@@ -252,13 +287,18 @@ const loginValidate = async () => {
           right: 1px;
           top: 1px;
           text-align: center;
+          background-color: @xtxColor;
           line-height: 34px;
           font-size: 14px;
-          background: #f5f5f5;
-          color: #666;
-          width: 90px;
+          color: #fff;
+          padding: 0 5px;
           height: 34px;
           cursor: pointer;
+          &.disable {
+            color: #666;
+            cursor: not-allowed;
+            background: #dddcdc;
+          }
         }
       }
       > .error {
