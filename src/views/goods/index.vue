@@ -77,6 +77,9 @@ import GoodsTabs from './components/goods-tabs.vue'
 import GoodsHot from './components/goods-hot.vue'
 import GoodsWarn from './components/goods-warn.vue'
 import XtxLoading from '@/components/library/xtx-loading.vue'
+import { useStore } from 'vuex'
+import Message from '@/components/library/Message'
+import { numberLiteralTypeAnnotation } from '@babel/types'
 const route = useRoute()
 
 const changeSku = (sku) => {
@@ -85,6 +88,7 @@ const changeSku = (sku) => {
     goods.value.oldPrice = sku.oldPrice
     goods.value.inventory = sku.inventory
   }
+  currSku.value = sku
 }
 // 获取商品详情
 const useGoods = () => {
@@ -111,8 +115,31 @@ const goods = useGoods()
 let count = ref(1)
 provide('goods', goods)
 
+const currSku = ref(null)
 // 加入购物车
-const insertCart = () => {}
+const store = useStore()
+const insertCart = () => {
+  if (currSku.value && currSku.value.skuId) {
+    const { id, name, price, mainPictures } = goods.value
+    const { skuId, specsText: attrsText, inventory: stock } = currSku.value
+    store.dispatch('cart/insertCart', {
+      skuId,
+      attrsText,
+      stock,
+      id,
+      name,
+      price,
+      nowPrice: price,
+      picture: mainPictures[0],
+      selected: true,
+      isEffective: true,
+      count: count.value,
+    })
+    Message({ type: 'success', text: '添加成功！' })
+  } else {
+    Message({ type: 'error', text: '请选择完整规格' })
+  }
+}
 </script>
 
 <style scoped lang="less">
