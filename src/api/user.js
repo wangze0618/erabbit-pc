@@ -9,3 +9,8 @@ export const userAccountLogin = ({ account, password }) => {
 export const userMobileLoginMsg = (mobile) => {
   return request('/login/code', 'get', { mobile })
 }
+
+// 验证码登录 默认123456
+export const userMobileLogin = ({ mobile, code }) => {
+  return request('/login/code', 'post', { mobile, code })
+}

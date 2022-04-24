@@ -123,7 +123,11 @@ import XtxCheckbox from '@/components/library/xtx-checkbox.vue'
 import { Form, Field } from 'vee-validate'
 import schema from '@/utils/vee-validation'
 import Message from '@/components/library/Message'
-import { userAccountLogin, userMobileLoginMsg } from '@/api/user'
+import {
+  userAccountLogin,
+  userMobileLoginMsg,
+  userMobileLogin,
+} from '@/api/user'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 import { useRouter } from 'vue-router'
@@ -177,7 +181,29 @@ const loginValidate = async () => {
   */
   if (valid) {
     if (isMsgLogin.value) {
-      // 手机验证码登录
+      try {
+        // 手机验证码登录
+        const { result } = await userMobileLogin(form)
+        const { id, account, avatar, mobile, nickname, token } = result
+        store.commit('user/setUser', {
+          id,
+          account,
+          avatar,
+          mobile,
+          nickname,
+          token,
+        })
+        console.log(result)
+        router.push(route.query.redirectUrl || '/')
+        Message({ type: 'success', text: '登录成功' })
+      } catch (error) {
+        if (error.response) {
+          Message({
+            type: 'error',
+            text: error.response.data.message || '登录失败',
+          })
+        }
+      }
     } else {
       // 账号密码登录
       try {
@@ -195,7 +221,7 @@ const loginValidate = async () => {
         router.push(route.query.redirectUrl || '/')
         Message({ type: 'success', text: '登录成功' })
       } catch (error) {
-        if (error.response.data) {
+        if (error.response) {
           Message({
             type: 'error',
             text: error.response.data.message || '登录失败',

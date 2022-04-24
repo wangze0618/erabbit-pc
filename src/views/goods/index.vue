@@ -30,7 +30,11 @@
             label="数量"
           />
           <!-- 按钮组件 -->
-          <XtxButton type="primary" size="large" style="margin-top: 20px"
+          <XtxButton
+            @click="insertCart()"
+            type="primary"
+            size="large"
+            style="margin-top: 20px"
             >加入购物车</XtxButton
           >
         </div>
@@ -106,6 +110,9 @@ const goods = useGoods()
 // 默认选择的数量
 let count = ref(1)
 provide('goods', goods)
+
+// 加入购物车
+const insertCart = () => {}
 </script>
 
 <style scoped lang="less">

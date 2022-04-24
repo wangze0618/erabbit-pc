@@ -5,11 +5,11 @@
         <template v-if="profile.token">
           <li>
             <a href="javascript:;">
-              <i class="iconfont icon-user"></i>{{ profile.accout }}
+              <i class="iconfont icon-user"></i>{{ profile.account }}
             </a>
           </li>
           <li>
-            <a href="javascript:;">退出登录</a>
+            <a href="javascript:;" @click="logout">退出登录</a>
           </li>
         </template>
         <template v-else>
@@ -39,24 +39,23 @@
     </div>
   </nav>
 </template>
-<script>
+<script setup>
+import router from '@/router'
 import { computed } from 'vue'
 import { useStore } from 'vuex'
 
-export default {
-  name: 'AppTopnav',
-  setup() {
-    // 获取用户的登录信息才能控制切换导航菜单
-    const store = useStore()
-    // 使用vuex的state需要设置计算属性
-    const profile = computed({
-      get() {
-        return store.state.user.profile
-      },
-      immediate: true,
-    })
-    return { profile }
+// 获取用户的登录信息才能控制切换导航菜单
+const store = useStore()
+// 使用vuex的state需要设置计算属性
+const profile = computed(
+  () => {
+    return store.state.user.profile
   },
+  { immediate: true }
+)
+const logout = () => {
+  store.commit('user/setUser', {})
+  router.push('/login')
 }
 </script>
 <style scoped lang="less">
