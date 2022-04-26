@@ -1,3 +1,5 @@
+import { getNewCartGoods } from '@/api/cart'
+
 // 购物车模块
 export default {
   namespaced: true,
@@ -27,6 +29,24 @@ export default {
       }
       state.list.unshift(payload) // 增加新的
     },
+    // 修改购物车
+    updateCart(state, goods) {
+      const updateGoods = state.list.find((item) => item.skuId === goods.skuId)
+      for (const key in goods) {
+        if (
+          goods[key] !== undefined &&
+          goods[key] !== null &&
+          goods[key] !== ''
+        ) {
+          updateGoods[key] = goods[key]
+        }
+      }
+    },
+    // 删除购物车商品
+    deleteCart(state, skuId) {
+      const index = state.list.findIndex((item) => item.skuId == skuId)
+      state.list.splice(index, 1)
+    },
   },
   actions: {
     // 加入购物车
@@ -40,6 +60,60 @@ export default {
           resolve()
         }
       })
+    },
+
+    // 获取商品列表
+    async findCart(ctx, payload) {
+      return new Promise(async (resolve, reject) => {
+        if (ctx.rootState.user.profile.token) {
+          // 已登录
+        } else {
+          // 未登录
+          // Promise.all([])
+          const promiseArr = ctx.state.list.map((goods) => {
+            return getNewCartGoods(goods.skuId)
+          })
+          const dataList = await Promise.all(promiseArr)
+          dataList.forEach((item, i) => {
+            ctx.commit('updateCart', {
+              skuId: ctx.state.list[i].skuId,
+              ...item.result,
+            })
+          })
+          resolve()
+        }
+      })
+    },
+
+    // 删除购物车商品
+    deleteCart(ctx, payload) {
+      return new Promise((resolve, reject) => {
+        if (ctx.rootState.user.profile.token) {
+          // 已登录
+        } else {
+          // 未登录
+          ctx.commit('deleteCart', payload)
+          resolve()
+        }
+      })
+    },
+  },
+  getters: {
+    // 有效商品列表
+    validList(state) {
+      return state.list.filter((goods) => goods.stock > 0 && goods.isEffective)
+    },
+    // 有效商品件数
+    validTotal(state, getters) {
+      return getters.validList.reduce((p, c) => p + c.count, 0)
+    },
+    // 有效商品总金额
+    validAmount(state, getters) {
+      return (
+        getters.validList.reduce((p, c) => {
+          return p + c.nowPrice * 100 * c.count
+        }, 0) / 100
+      )
     },
   },
 }

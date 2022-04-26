@@ -1,7 +1,8 @@
 <template>
   <div class="main">
     <img src="@/assets/images/404.png" alt="" />
-    <h1>404! 页面未找到！</h1>
+    <h1>404!</h1>
+    <h1>Page not found!</h1>
     <button @click="$router.push('/')">回到首页</button>
   </div>
 </template>
@@ -10,7 +11,11 @@
 import { ref } from 'vue'
 </script>
 
-<style scoped lang="less">
+<style lang="less">
+body,
+.main {
+  background-color: #f9f9f9 !important;
+}
 @fontSize: calc(0.6vw + 20px);
 .main {
   text-align: center;
@@ -25,7 +30,7 @@ import { ref } from 'vue'
     color: @xtxColor;
   }
   button {
-    margin-top: 20px;
+    margin-top: 30px;
     width: 100px;
     height: 40px;
     border: none;
