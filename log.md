@@ -7,3 +7,10 @@
 * 改造 home-new 组件成为数据懒加载，掌握 useIntersectionObserver 函数的用法
 * 封装 useLazyData 函数，作为数据懒加载公用函数
 * 把 home-new 和 home-hot 改造成懒加载方式
+
+2. 购物车模块 - 处理价格小数点的问题
+解决办法：例如：
+
+```js
+Math.round(goods.nowPrice * 100 * goods.count) / 100
+```

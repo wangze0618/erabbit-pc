@@ -14,7 +14,7 @@
           v-for="goods in $store.getters['cart/validList']"
           :key="goods.skuId"
         >
-          <RouterLink to="">
+          <RouterLink :to="`/product/${goods.id}`">
             <img :src="goods.picture" alt="" />
             <div class="center">
               <p class="name ellipsis-2">
@@ -39,7 +39,9 @@
           <p>共 {{ $store.getters['cart/validTotal'] }} 件商品</p>
           <p>&yen;{{ $store.getters['cart/validAmount'] }}</p>
         </div>
-        <XtxButton type="plain">去购物车结算</XtxButton>
+        <XtxButton @click="$router.push('/cart')" type="plain"
+          >去购物车结算</XtxButton
+        >
       </div>
     </div>
   </div>
@@ -53,7 +55,7 @@ import XtxButton from './library/xtx-button.vue'
 const store = useStore()
 try {
   store.dispatch('cart/findCart')
-  Message({ type: 'success', text: '更新本地购物车成功' })
+  // Message({ type: 'success', text: '更新本地购物车成功' })
 } catch (error) {}
 
 const deleteCart = (skuId) => {
