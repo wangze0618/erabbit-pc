@@ -49,6 +49,18 @@ export default {
     },
   },
   actions: {
+    // 更新购物车
+    updateCart(ctx, payload) {
+      return new Promise((resolve, reject) => {
+        if (ctx.rootState.user.profile.token) {
+          // 已登录
+        } else {
+          // 未登录
+          ctx.commit('updateCart', payload)
+          resolve()
+        }
+      })
+    },
     // 加入购物车
     insertCart(ctx, payload) {
       return new Promise((resolve, reject) => {
@@ -101,7 +113,9 @@ export default {
   getters: {
     // 有效商品列表
     validList(state) {
-      return state.list.filter((goods) => goods.stock > 0 && goods.isEffective)
+      return state.list.filter(
+        (goods) => goods.stock > 0 && goods.isEffective == true
+      )
     },
     // 有效商品件数
     validTotal(state, getters) {

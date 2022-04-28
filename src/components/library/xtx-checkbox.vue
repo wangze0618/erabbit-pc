@@ -18,15 +18,14 @@ const props = defineProps({
   },
 })
 // 定义emit
-const emit = defineEmits(['change', 'updateValue'])
+const emit = defineEmits(['change'])
 // 更改复选框状态
 const checked = ref(false)
 const checkedChange = () => {
   checked.value = !checked.value
   // 通知父组件
-  emit('updateValue', checked.value)
   // 让组件支持change事件
-  emit('change', !checked.value)
+  emit('change', checked.value)
 }
 
 // 侦听参数变化，设置checked数据

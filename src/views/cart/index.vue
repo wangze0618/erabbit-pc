@@ -27,7 +27,12 @@
               v-for="goods in $store.getters['cart/validList']"
               :key="goods.skuId"
             >
-              <td><XtxCheckbox :model-value="goods.selected" /></td>
+              <td>
+                <XtxCheckbox
+                  :modelValue="goods.selected"
+                  @change="($event) => checkOne(goods.skuId, $event)"
+                />
+              </td>
               <td>
                 <div class="goods">
                   <RouterLink :to="`/product/${goods.id}`"
@@ -68,12 +73,12 @@
             </tr>
           </tbody>
           <!-- 无效商品 -->
-          <tbody v-if="$sotre.getters['cart/invalidList'].length">
+          <tbody v-if="$store.getters['cart/invalidList'].length">
             <tr>
               <td colspan="6"><h3 class="tit">失效商品</h3></td>
             </tr>
             <tr
-              v-for="goods in $sotre.getters['cart/invalidList']"
+              v-for="goods in $store.getters['cart/invalidList']"
               :key="goods.id"
             >
               <td><XtxCheckbox style="color: #eee" /></td>
@@ -120,8 +125,9 @@
           <a href="javascript:;">清空失效商品</a>
         </div>
         <div class="total">
-          共 7 件商品，已选择 2 件，商品合计：
-          <span class="red">¥400</span>
+          共 {{ $store.getters['cart/validTotal'] }} 件商品，已选择
+          {{ $store.getters['cart/selectedTotal'] }} 件，商品合计：
+          <span class="red">￥{{ $store.getters['cart/selectedAmount'] }}</span>
           <XtxButton type="primary">下单结算</XtxButton>
         </div>
       </div>
@@ -137,6 +143,12 @@ import XtxBreadItem from '@/components/library/xtx-bread-item.vue'
 import XtxCheckbox from '@/components/library/xtx-checkbox.vue'
 import XtxNumberbox from '@/components/library/xtx-numberbox.vue'
 import XtxButton from '@/components/library/xtx-button.vue'
+import { useStore } from 'vuex'
+const store = useStore()
+const checkOne = (skuId, selected) => {
+  store.dispatch('cart/updateCart', { skuId, selected })
+  console.log(skuId, selected)
+}
 </script>
 <style scoped lang="less">
 a {
