@@ -109,6 +109,19 @@ export default {
         }
       })
     },
+    // 全选与取消全选
+    CheckAllCart(ctx, selected) {
+      return new Promise((resolve, reject) => {
+        if (ctx.rootState.user.profile.token) {
+          // 已登录
+        } else {
+          // 未登录
+          ctx.getters.validList.forEach((goods) => {
+            ctx.commit('updateCart', { skuId: goods.skuId, selected })
+          })
+        }
+      })
+    },
   },
   getters: {
     // 有效商品列表

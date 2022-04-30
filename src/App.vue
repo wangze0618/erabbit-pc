@@ -2,7 +2,9 @@
   <!-- 一级路由 -->
   <router-view></router-view>
 </template>
-<script setup></script>
+<script setup>
+import XtxConfirm from './components/library/xtx-confirm.vue'
+</script>
 <style lang="less">
 #nprogress {
   .bar {

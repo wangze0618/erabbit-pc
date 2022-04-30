@@ -51,6 +51,7 @@ defineProps({
   width: 60px;
   height: 32px;
   font-size: 14px;
+  line-height: 32px;
 }
 .default {
   border-color: #e4e4e4;

@@ -6,11 +6,16 @@
         <XtxBreadItem>购物车</XtxBreadItem>
       </XtxBread>
       <div class="cart">
-        <table>
+        <template v-if="$store.getters['cart/validList'].length == 0">
+          <CartNone></CartNone>
+        </template>
+        <table v-else>
           <thead>
             <tr>
               <th width="120">
-                <XtxCheckbox :modelValue="$store.getters['cart/isCheckAll']"
+                <XtxCheckbox
+                  :modelValue="$store.getters['cart/isCheckAll']"
+                  @change="checkAll($event)"
                   >全选</XtxCheckbox
                 >
               </th>
@@ -67,7 +72,14 @@
               </td>
               <td class="tc">
                 <p><a href="javascript:;">移入收藏夹</a></p>
-                <p><a class="green" href="javascript:;">删除</a></p>
+                <p>
+                  <a
+                    @click="deleteCart(goods.skuId)"
+                    class="green"
+                    href="javascript:;"
+                    >删除</a
+                  >
+                </p>
                 <p><a href="javascript:;">找相似</a></p>
               </td>
             </tr>
@@ -107,7 +119,14 @@
                 </p>
               </td>
               <td class="tc">
-                <p><a class="green" href="javascript:;">删除</a></p>
+                <p>
+                  <a
+                    @click="deleteCart(goods.skuId)"
+                    class="green"
+                    href="javascript:;"
+                    >删除</a
+                  >
+                </p>
                 <p><a href="javascript:;">找相似</a></p>
               </td>
             </tr>
@@ -115,9 +134,11 @@
         </table>
       </div>
       <!-- 操作栏 -->
-      <div class="action">
+      <div class="action" v-if="$store.getters['cart/validList'].length !== 0">
         <div class="batch">
-          <XtxCheckbox :modelValue="$store.getters['cart/isCheckAll']"
+          <XtxCheckbox
+            :modelValue="$store.getters['cart/isCheckAll']"
+            @change="checkAll($event)"
             >全选</XtxCheckbox
           >
           <a href="javascript:;">删除商品</a>
@@ -144,10 +165,24 @@ import XtxCheckbox from '@/components/library/xtx-checkbox.vue'
 import XtxNumberbox from '@/components/library/xtx-numberbox.vue'
 import XtxButton from '@/components/library/xtx-button.vue'
 import { useStore } from 'vuex'
+import Message from '@/components/library/Message'
+import CartNone from './components/cart-none.vue'
 const store = useStore()
 const checkOne = (skuId, selected) => {
   store.dispatch('cart/updateCart', { skuId, selected })
-  console.log(skuId, selected)
+}
+
+const checkAll = (selected) => {
+  store.dispatch('cart/CheckAllCart', selected)
+}
+
+const deleteCart = (skuId) => {
+  try {
+    store.dispatch('cart/deleteCart', skuId)
+    Message({ type: 'success', text: '删除成功' })
+  } catch (error) {
+    Message({ type: 'error', text: '删除失败' })
+  }
 }
 </script>
 <style scoped lang="less">
