@@ -167,6 +167,8 @@ import XtxButton from '@/components/library/xtx-button.vue'
 import { useStore } from 'vuex'
 import Message from '@/components/library/Message'
 import CartNone from './components/cart-none.vue'
+import confirmBox from '@/components/library/Confirm'
+
 const store = useStore()
 const checkOne = (skuId, selected) => {
   store.dispatch('cart/updateCart', { skuId, selected })
@@ -176,12 +178,13 @@ const checkAll = (selected) => {
   store.dispatch('cart/CheckAllCart', selected)
 }
 
-const deleteCart = (skuId) => {
+const deleteCart = async (skuId) => {
   try {
+    await confirmBox({ text: '确认删除商品？' })
     store.dispatch('cart/deleteCart', skuId)
     Message({ type: 'success', text: '删除成功' })
   } catch (error) {
-    Message({ type: 'error', text: '删除失败' })
+    // Message({ type: 'error', text: '删除失败' })
   }
 }
 </script>

@@ -1,32 +1,28 @@
 <template>
-  <transition name="wrap">
-    <template v-if="visible">
-      <div class="xtx-confirm" @mousewheel.prevent @touchmove.prevent>
-        <div class="wrapper">
-          <div class="header">
-            <h3>{{ props.title }}</h3>
-            <a
-              @click="visible = false"
-              href="JavaScript:;"
-              class="iconfont icon-close-new"
-            ></a>
-          </div>
-          <div class="body">
-            <i class="iconfont icon-warning"></i>
-            <span>{{ props.text }}</span>
-          </div>
-          <div class="footer">
-            <XtxButton @click="cancel()" size="mini" type="gray"
-              >取消</XtxButton
-            >
-            <XtxButton @click="confirm()" size="mini" type="primary"
-              >确认</XtxButton
-            >
-          </div>
+  <div class="xtx-confirm dark" @mousewheel.prevent @touchmove.prevent>
+    <transition name="wrap">
+      <div v-if="visible" class="wrapper">
+        <div class="header">
+          <h3>{{ props.title }}</h3>
+          <a
+            @click="visible = false"
+            href="JavaScript:;"
+            class="iconfont icon-close-new"
+          ></a>
+        </div>
+        <div class="body">
+          <i class="iconfont icon-warning"></i>
+          <span>{{ props.text }}</span>
+        </div>
+        <div class="footer">
+          <XtxButton @click="cancel()" size="mini" type="gray">取消</XtxButton>
+          <XtxButton @click="confirm()" size="mini" type="primary"
+            >确认</XtxButton
+          >
         </div>
       </div>
-    </template>
-  </transition>
+    </transition>
+  </div>
 </template>
 <script setup>
 import { onMounted, ref } from 'vue'
@@ -41,8 +37,16 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  cancelCallback: {
+    type: Function,
+  },
+  confirmCallback: {
+    type: Function,
+  },
+  logR: {
+    type: Function,
+  },
 })
-confirmBox({ title: 'aaa' })
 // 控制是否显示
 const visible = ref(false)
 
@@ -51,11 +55,13 @@ onMounted(() => {
 })
 // 确认按钮
 const confirm = () => {
-  visible.value = false
+  props.confirmCallback()
+  // visible.value = false
 }
 // 取消按钮
 const cancel = () => {
-  visible.value = false
+  props.cancelCallback()
+  // visible.value = false
 }
 </script>
 
@@ -73,30 +79,39 @@ const cancel = () => {
 }
 
 .wrap-enter-active {
-  animation: bounce-in 0.5s;
+  animation: bounce-in 0.4s;
 }
 .wrap-leave-active {
-  animation: bounce-in 0.5s reverse;
+  animation: bounce-in 0.4s reverse;
 }
 
-.xtx-confirm {
+.wrap-enter-from,
+.wrap-leave-to {
+  opacity: 1;
+}
+.dark {
   background: rgba(0, 0, 0, 0.398) !important;
+}
+.xtx-confirm {
   position: fixed;
   left: 0;
   top: 0;
   width: 100%;
   height: 100%;
   z-index: 8888;
-  backdrop-filter: blur(5px);
+  // backdrop-filter: blur(5px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
   .wrapper {
-    // box-shadow: 2px 3px 8px #999;
+    box-shadow: 0px 10px 20px #999;
     width: calc(10vw + 200px);
     background: #fff;
     border-radius: 12px;
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    // top: 50%;
+    // left: 50%;
+    // transform: translate(-50%, -50%);
     .header {
       border-bottom: 1px dashed #dcdcdc;
     }
@@ -108,7 +123,7 @@ const cancel = () => {
     }
     .body {
       padding: 20px 40px;
-      font-size: calc(0.4vw + 15px);
+      font-size: calc(0.4vw + 12px);
       text-align: center;
       .icon-warning {
         color: @priceColor;
