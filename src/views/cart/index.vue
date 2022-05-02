@@ -27,7 +27,7 @@
             </tr>
           </thead>
           <!-- 有效商品 -->
-          <tbody>
+          <tbody class="validGoods">
             <tr
               v-for="goods in $store.getters['cart/validList']"
               :key="goods.skuId"
@@ -48,6 +48,11 @@
                       {{ goods.name }}
                     </p>
                     <!-- 选择规格组件 -->
+                    <CartSku
+                      @change="updateCartSku($event, goods.skuId)"
+                      :skuId="goods.skuId"
+                      :attrsText="goods.attrsText"
+                    ></CartSku>
                   </div>
                 </div>
               </td>
@@ -61,7 +66,11 @@
                 </p>
               </td>
               <td class="tc">
-                <XtxNumberbox :count="goods.count" />
+                <XtxNumberbox
+                  @change="updateCount($event, goods.skuId)"
+                  :max="goods.stock"
+                  :count="goods.count"
+                />
               </td>
               <td class="tc">
                 <p class="f16 red">
@@ -141,9 +150,11 @@
             @change="checkAll($event)"
             >全选</XtxCheckbox
           >
-          <a href="javascript:;">删除商品</a>
+          <a @click="batchDeleteCart()" href="javascript:;">删除商品</a>
           <a href="javascript:;">移入收藏夹</a>
-          <a href="javascript:;">清空失效商品</a>
+          <a @click="batchDeleteInvalidCart()" href="javascript:;"
+            >清空失效商品</a
+          >
         </div>
         <div class="total">
           共 {{ $store.getters['cart/validTotal'] }} 件商品，已选择
@@ -167,8 +178,8 @@ import XtxButton from '@/components/library/xtx-button.vue'
 import { useStore } from 'vuex'
 import Message from '@/components/library/Message'
 import CartNone from './components/cart-none.vue'
+import CartSku from './components/cart-sku.vue'
 import confirmBox from '@/components/library/Confirm'
-
 const store = useStore()
 const checkOne = (skuId, selected) => {
   store.dispatch('cart/updateCart', { skuId, selected })
@@ -186,6 +197,32 @@ const deleteCart = async (skuId) => {
   } catch (error) {
     // Message({ type: 'error', text: '删除失败' })
   }
+}
+
+// 批量删除商品
+const batchDeleteCart = async () => {
+  try {
+    await confirmBox({ title: '温馨提示', text: '确认批量删除选中的商品？' })
+    store.dispatch('cart/batchDeleteCart')
+  } catch (error) {}
+}
+// 批量删除无效商品
+const batchDeleteInvalidCart = async () => {
+  try {
+    await confirmBox({
+      title: '温馨提示',
+      text: '确认批量删除选中的无效商品？',
+    })
+    store.dispatch('cart/batchDeleteInvalidCart')
+  } catch (error) {}
+}
+// 改变数量
+const updateCount = (count, skuId) => {
+  store.dispatch('cart/updateCart', { skuId, count })
+}
+// 更新sku信息
+const updateCartSku = (newSkuId, oldSkuId) => {
+  console.log(newSkuId.value.skuId, oldSkuId)
 }
 </script>
 <style scoped lang="less">
@@ -205,6 +242,11 @@ tr {
     caret-color: transparent;
   }
 }
+.validGoods {
+  tr {
+    text-align: left;
+  }
+}
 .red {
   color: @priceColor;
 }
@@ -217,6 +259,7 @@ tr {
 .goods {
   display: flex;
   align-items: center;
+
   img {
     width: 100px;
     height: 100px;

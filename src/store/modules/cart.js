@@ -49,6 +49,34 @@ export default {
     },
   },
   actions: {
+    // 批量删除购物车
+    batchDeleteCart(ctx) {
+      return new Promise((resolve, reject) => {
+        if (ctx.rootState.user.profile.token) {
+          // 已登录
+        } else {
+          // 未登录
+          ctx.getters.selectedList.forEach((item) => {
+            ctx.commit('deleteCart', item.skuId)
+          })
+          resolve()
+        }
+      })
+    },
+    // 批量删除无效购物车
+    batchDeleteInvalidCart(ctx) {
+      return new Promise((resolve, reject) => {
+        if (ctx.rootState.user.profile.token) {
+          // 已登录
+        } else {
+          // 未登录
+          ctx.getters.invalidList.forEach((item) => {
+            ctx.commit('deleteCart', item.skuId)
+          })
+          resolve()
+        }
+      })
+    },
     // 更新购物车
     updateCart(ctx, payload) {
       return new Promise((resolve, reject) => {

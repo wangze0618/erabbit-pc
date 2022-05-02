@@ -5,7 +5,7 @@
         <div class="header">
           <h3>{{ props.title }}</h3>
           <a
-            @click="visible = false"
+            @click="cancel()"
             href="JavaScript:;"
             class="iconfont icon-close-new"
           ></a>
@@ -43,9 +43,6 @@ const props = defineProps({
   confirmCallback: {
     type: Function,
   },
-  logR: {
-    type: Function,
-  },
 })
 // 控制是否显示
 const visible = ref(false)
@@ -79,10 +76,10 @@ const cancel = () => {
 }
 
 .wrap-enter-active {
-  animation: bounce-in 0.4s;
+  animation: bounce-in 0.5s;
 }
 .wrap-leave-active {
-  animation: bounce-in 0.4s reverse;
+  animation: bounce-in 0.5s reverse;
 }
 
 .wrap-enter-from,
@@ -91,6 +88,7 @@ const cancel = () => {
 }
 .dark {
   background: rgba(0, 0, 0, 0.398) !important;
+  backdrop-filter: blur(5px);
 }
 .xtx-confirm {
   position: fixed;
@@ -99,12 +97,11 @@ const cancel = () => {
   width: 100%;
   height: 100%;
   z-index: 8888;
-  // backdrop-filter: blur(5px);
   display: flex;
   justify-content: center;
   align-items: center;
   .wrapper {
-    box-shadow: 0px 10px 20px #999;
+    box-shadow: 0px 10px 20px #686868;
     width: calc(10vw + 200px);
     background: #fff;
     border-radius: 12px;

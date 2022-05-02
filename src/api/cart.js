@@ -8,3 +8,10 @@ import request from '@/utils/request'
 export const getNewCartGoods = (skuId) => {
   return request(`/goods/stock/${skuId}`, 'get')
 }
+/*
+获取商品的对应的sku数据
+2022年5月2日 20:57:15
+ */
+export const getGoodsSku = (skuId) => {
+  return request(`/goods/sku/${skuId}`, 'get')
+}
