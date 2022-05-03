@@ -1,4 +1,10 @@
-import { getNewCartGoods } from '@/api/cart'
+import {
+  deleteCart,
+  findCart,
+  getNewCartGoods,
+  insertCart,
+  mergeLocalCart,
+} from '@/api/cart'
 
 // 购物车模块
 export default {
@@ -11,6 +17,10 @@ export default {
     }
   },
   mutations: {
+    // 设置本地购物车
+    setCart(state, list) {
+      state.list = list
+    },
     // 本地：id skuId name picture price nowPrice count attrsText selected stock isEffective
     // 线上：比上面多 isCollect 有用 discount 无用 两项项信息
     insertCart(state, payload) {
@@ -49,11 +59,54 @@ export default {
     },
   },
   actions: {
-    // 批量删除购物车
-    batchDeleteCart(ctx) {
+    // 合并购物车
+    async mergeCart(ctx) {
+      const cartList = ctx.state.list.map((goods) => {
+        return {
+          skuId: goods.skuId,
+          selected: goods.selected,
+          count: goods.count,
+        }
+      })
+      try {
+        await mergeLocalCart(cartList)
+        // 合并成功 清空购物车
+        ctx.commit('setCart', [])
+      } catch (error) {}
+    },
+    // 修改规格
+    updateCartSku(ctx, { newSku, oldSkuId }) {
       return new Promise((resolve, reject) => {
         if (ctx.rootState.user.profile.token) {
           // 已登录
+        } else {
+          // 未登录
+          const oldGoods = ctx.state.list.find(
+            (item) => item.skuId === oldSkuId
+          )
+          ctx.commit('deleteCart', oldSkuId)
+          const {
+            skuId,
+            price: nowPrice,
+            specsText: attrsText,
+            inventory: stock,
+          } = newSku
+          const newGoods = { ...oldGoods, skuId, nowPrice, attrsText, stock }
+          ctx.commit('insertCart', newGoods)
+          resolve()
+        }
+      })
+    },
+    // 批量删除购物车
+    batchDeleteCart(ctx) {
+      return new Promise(async (resolve, reject) => {
+        if (ctx.rootState.user.profile.token) {
+          // 已登录
+          const ids = ctx.getters.selectedList.map((item) => item.skuId)
+          await deleteCart(ids)
+          const { result } = await findCart()
+          ctx.commit('setCart', result)
+          resolve()
         } else {
           // 未登录
           ctx.getters.selectedList.forEach((item) => {
@@ -65,9 +118,14 @@ export default {
     },
     // 批量删除无效购物车
     batchDeleteInvalidCart(ctx) {
-      return new Promise((resolve, reject) => {
+      return new Promise(async (resolve, reject) => {
         if (ctx.rootState.user.profile.token) {
           // 已登录
+          const ids = ctx.getters.invalidList.map((item) => item.skuId)
+          await deleteCart(ids)
+          const { result } = await findCart()
+          ctx.commit('setCart', result)
+          resolve()
         } else {
           // 未登录
           ctx.getters.invalidList.forEach((item) => {
@@ -90,10 +148,15 @@ export default {
       })
     },
     // 加入购物车
-    insertCart(ctx, payload) {
-      return new Promise((resolve, reject) => {
+    async insertCart(ctx, payload) {
+      return new Promise(async (resolve, reject) => {
         if (ctx.rootState.user.profile.token) {
           // 已登录
+          const { skuId, count } = payload
+          await insertCart({ skuId, count })
+          const { result } = await findCart()
+          ctx.commit('setCart', result)
+          resolve()
         } else {
           // 未登录
           ctx.commit('insertCart', payload)
@@ -107,6 +170,9 @@ export default {
       return new Promise(async (resolve, reject) => {
         if (ctx.rootState.user.profile.token) {
           // 已登录
+          const { result } = await findCart()
+          ctx.commit('setCart', result)
+          resolve()
         } else {
           // 未登录
           // Promise.all([])
@@ -127,9 +193,13 @@ export default {
 
     // 删除购物车商品
     deleteCart(ctx, payload) {
-      return new Promise((resolve, reject) => {
+      return new Promise(async (resolve, reject) => {
         if (ctx.rootState.user.profile.token) {
           // 已登录
+          await deleteCart([payload])
+          const { result } = await findCart()
+          ctx.commit('setCart', result)
+          resolve()
         } else {
           // 未登录
           ctx.commit('deleteCart', payload)

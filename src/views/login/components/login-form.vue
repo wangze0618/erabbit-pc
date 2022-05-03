@@ -217,6 +217,7 @@ const loginValidate = async () => {
           nickname,
           token,
         })
+        await store.dispatch('cart/mergeCart')
         // 进行路由跳转
         router.push(route.query.redirectUrl || '/')
         Message({ type: 'success', text: '登录成功' })

@@ -80,8 +80,8 @@ const confirm = () => {
     currSku.value.skuId &&
     currSku.value.skuId !== props.skuId
   ) {
-    emit('change', currSku)
-    // close()
+    emit('change', currSku.value)
+    close()
   }
 }
 </script>

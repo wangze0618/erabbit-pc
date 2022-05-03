@@ -15,3 +15,33 @@ export const getNewCartGoods = (skuId) => {
 export const getGoodsSku = (skuId) => {
   return request(`/goods/sku/${skuId}`, 'get')
 }
+
+/**
+ * 合并购物车
+ * 2022年5月3日 17:43:39
+ */
+export const mergeLocalCart = (cartList) => {
+  return request('/member/cart/merge', 'post', cartList)
+}
+
+/**
+ * 获取购物车列表
+ * 2022年5月3日 21:07:10
+ */
+export const findCart = () => {
+  return request('/member/cart', 'get')
+}
+/**
+ * 加入购物车
+ * 2022年5月3日 21:54:49
+ */
+export const insertCart = ({ skuId, count }) => {
+  return request('/member/cart', 'post', { skuId, count })
+}
+/**
+ * 删除/清空购物车
+ * 2022年5月3日 22:18:16
+ */
+export const deleteCart = (ids) => {
+  return request('/member/cart', 'delete', { ids })
+}

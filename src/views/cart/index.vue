@@ -181,6 +181,7 @@ import CartNone from './components/cart-none.vue'
 import CartSku from './components/cart-sku.vue'
 import confirmBox from '@/components/library/Confirm'
 const store = useStore()
+
 const checkOne = (skuId, selected) => {
   store.dispatch('cart/updateCart', { skuId, selected })
 }
@@ -221,8 +222,8 @@ const updateCount = (count, skuId) => {
   store.dispatch('cart/updateCart', { skuId, count })
 }
 // 更新sku信息
-const updateCartSku = (newSkuId, oldSkuId) => {
-  console.log(newSkuId.value.skuId, oldSkuId)
+const updateCartSku = (newSku, oldSkuId) => {
+  store.dispatch('cart/updateCartSku',{oldSkuId,newSku})
 }
 </script>
 <style scoped lang="less">
