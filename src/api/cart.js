@@ -45,3 +45,20 @@ export const insertCart = ({ skuId, count }) => {
 export const deleteCart = (ids) => {
   return request('/member/cart', 'delete', { ids })
 }
+
+/**
+ * 修改购物车商品选中状态，数量
+ * 2022年5月4日 21:36:40
+ */
+export const updateCart = ({ skuId, selected, count }) => {
+  return request(`/member/cart/${skuId}`, 'put', { selected, count })
+}
+
+/* 
+购物车全选/取消全选
+2022年5月4日 22:27:28
+ids参数如果不传，表示用户访问的是全选和取消全选操作，后端根据selected确定用户是全选和取消全选
+*/
+export const CheckAllCart = ({ selected, ids }) => {
+  return request(`/member/cart/selected`, 'put', { selected, ids })
+}

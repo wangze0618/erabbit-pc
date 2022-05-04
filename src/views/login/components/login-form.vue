@@ -193,8 +193,8 @@ const loginValidate = async () => {
           nickname,
           token,
         })
-        console.log(result)
         router.push(route.query.redirectUrl || '/')
+        await store.dispatch('cart/mergeCart')
         Message({ type: 'success', text: '登录成功' })
       } catch (error) {
         if (error.response) {

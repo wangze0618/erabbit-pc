@@ -1,9 +1,11 @@
 import {
+  CheckAllCart,
   deleteCart,
   findCart,
   getNewCartGoods,
   insertCart,
   mergeLocalCart,
+  updateCart,
 } from '@/api/cart'
 
 // 购物车模块
@@ -68,17 +70,21 @@ export default {
           count: goods.count,
         }
       })
-      try {
-        await mergeLocalCart(cartList)
-        // 合并成功 清空购物车
-        ctx.commit('setCart', [])
-      } catch (error) {}
+      await mergeLocalCart(cartList)
+      // 合并成功 清空购物车
+      ctx.commit('setCart', [])
     },
     // 修改规格
     updateCartSku(ctx, { newSku, oldSkuId }) {
-      return new Promise((resolve, reject) => {
+      return new Promise(async (resolve, reject) => {
         if (ctx.rootState.user.profile.token) {
           // 已登录
+          const oldGoods = ctx.state.list.find((item) => item.skuId == oldSkuId)
+          await deleteCart([oldGoods.skuId])
+          const newGoods = { skuId: newSku.skuId, count: oldGoods.count }
+          await insertCart(newGoods)
+          const { result } = await findCart()
+          ctx.commit('setCart', result)
         } else {
           // 未登录
           const oldGoods = ctx.state.list.find(
@@ -137,9 +143,12 @@ export default {
     },
     // 更新购物车
     updateCart(ctx, payload) {
-      return new Promise((resolve, reject) => {
+      return new Promise(async (resolve, reject) => {
         if (ctx.rootState.user.profile.token) {
           // 已登录
+          await updateCart(payload)
+          const { result } = await findCart()
+          ctx.commit('setCart', result)
         } else {
           // 未登录
           ctx.commit('updateCart', payload)
@@ -209,9 +218,13 @@ export default {
     },
     // 全选与取消全选
     CheckAllCart(ctx, selected) {
-      return new Promise((resolve, reject) => {
+      return new Promise(async (resolve, reject) => {
         if (ctx.rootState.user.profile.token) {
           // 已登录
+          const ids = ctx.getters.validList.map((item) => item.skuId)
+          await CheckAllCart({ selected, ids })
+          const { result } = await findCart()
+          ctx.commit('setCart', result)
         } else {
           // 未登录
           ctx.getters.validList.forEach((goods) => {
