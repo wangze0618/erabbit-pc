@@ -11,13 +11,11 @@
 import { ref } from 'vue'
 </script>
 
-<style lang="less">
-body,
-.main {
-  background-color: #f9f9f9 !important;
-}
+<style scoped lang="less">
 @fontSize: calc(0.6vw + 20px);
 .main {
+  background-color: #f9f9f9 !important;
+  height: 100vh;
   text-align: center;
   img {
     width: auto;

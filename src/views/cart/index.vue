@@ -160,7 +160,7 @@
           共 {{ $store.getters['cart/validTotal'] }} 件商品，已选择
           {{ $store.getters['cart/selectedTotal'] }} 件，商品合计：
           <span class="red">￥{{ $store.getters['cart/selectedAmount'] }}</span>
-          <XtxButton type="primary">下单结算</XtxButton>
+          <XtxButton @click="checkOut()" type="primary">下单结算</XtxButton>
         </div>
       </div>
       <!-- 猜你喜欢 -->
@@ -180,6 +180,7 @@ import Message from '@/components/library/Message'
 import CartNone from './components/cart-none.vue'
 import CartSku from './components/cart-sku.vue'
 import confirmBox from '@/components/library/Confirm'
+import { useRouter } from 'vue-router'
 const store = useStore()
 
 const checkOne = (skuId, selected) => {
@@ -197,6 +198,22 @@ const deleteCart = async (skuId) => {
     Message({ type: 'success', text: '删除成功' })
   } catch (error) {
     // Message({ type: 'error', text: '删除失败' })
+  }
+}
+// 下单结算
+const router = useRouter()
+const checkOut = async () => {
+  // 1. 判断是否选中商品，且提示
+  // 2. 弹出确认框，提示：下单结算要登录
+  // 3. 使用导航守卫，遇见
+
+  if (store.getters['cart/selectedList'].length === 0) {
+    Message({ text: '至少选中一件商品！' })
+  } else {
+    try {
+      await confirmBox({ text: '您需要先登录，现在去登录？' })
+      router.push('/member/checkout')
+    } catch (error) {}
   }
 }
 
@@ -223,7 +240,7 @@ const updateCount = (count, skuId) => {
 }
 // 更新sku信息
 const updateCartSku = (newSku, oldSkuId) => {
-  store.dispatch('cart/updateCartSku',{oldSkuId,newSku})
+  store.dispatch('cart/updateCartSku', { oldSkuId, newSku })
 }
 </script>
 <style scoped lang="less">

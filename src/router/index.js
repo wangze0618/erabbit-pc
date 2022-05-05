@@ -1,3 +1,4 @@
+import store from '@/store'
 import { createRouter, createWebHashHistory } from 'vue-router'
 
 // 导入组件
@@ -29,15 +30,15 @@ const routes = [
     path: '/login',
     component: Login,
   },
-  {
-    path: '/404',
-    component: ErrorPage,
-  },
-  {
-    path: '/:catchAll(.*)',
-    redirect: '/404',
-    hidden: true,
-  },
+  // {
+  //   path: '/404',
+  //   component: ErrorPage,
+  // },
+  // {
+  //   path: '/:catchAll(.*)',
+  //   redirect: '/404',
+  //   hidden: true,
+  // },
 ]
 
 const router = createRouter({
@@ -50,4 +51,18 @@ const router = createRouter({
   },
 })
 
+router.beforeEach((to, from, next) => {
+  const { profile } = store.state.user
+
+  if (!profile.token && to.path.startsWith('/member')) {
+    // 未登录的情况
+    console.log(to)
+    next(`/login?redirectUrl=${encodeURIComponent(to.fullPath)}`)
+  } else {
+    // 已登录的情况
+    next()
+  }
+})
+const whiteList = routes.map((item) => item)
+console.log(whiteList)
 export default router
