@@ -50,7 +50,6 @@ defineProps({
 .mini {
   width: 60px;
   height: 32px;
-  font-size: 14px;
   line-height: 32px;
 }
 .default {

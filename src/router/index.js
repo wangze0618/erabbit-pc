@@ -10,6 +10,7 @@ const Goods = () => import('@/views/goods/index.vue')
 const Login = () => import('@/views/login/index.vue')
 const ErrorPage = () => import('@/views/404.vue')
 const Cart = () => import('@/views/cart/index.vue')
+const CheckOut = () => import('@/views/member/pay/checkout.vue')
 
 // 路由规则
 const routes = [
@@ -23,6 +24,7 @@ const routes = [
       { path: '/category/sub/:id', component: SubCategory },
       { path: '/product/:id', component: Goods },
       { path: '/cart', component: Cart },
+      { path: '/member/checkout', component: CheckOut },
     ],
   },
   {
@@ -53,16 +55,14 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const { profile } = store.state.user
-
+  // 未登录的情况
   if (!profile.token && to.path.startsWith('/member')) {
-    // 未登录的情况
-    console.log(to)
     next(`/login?redirectUrl=${encodeURIComponent(to.fullPath)}`)
   } else {
     // 已登录的情况
     next()
   }
 })
-const whiteList = routes.map((item) => item)
-console.log(whiteList)
+// const whiteList = routes.map((item) => item)
+// console.log(whiteList)
 export default router

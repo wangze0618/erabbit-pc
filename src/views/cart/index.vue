@@ -207,14 +207,14 @@ const checkOut = async () => {
   // 2. 弹出确认框，提示：下单结算要登录
   // 3. 使用导航守卫，遇见
 
+  const { profile } = store.state.user
   if (store.getters['cart/selectedList'].length === 0) {
     Message({ text: '至少选中一件商品！' })
-  } else {
-    try {
-      await confirmBox({ text: '您需要先登录，现在去登录？' })
-      router.push('/member/checkout')
-    } catch (error) {}
   }
+  if (!profile.token) {
+    await confirmBox({ text: '您需要先登录，现在去登录？' })
+  }
+  router.push('/member/checkout')
 }
 
 // 批量删除商品

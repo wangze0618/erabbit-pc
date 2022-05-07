@@ -1,5 +1,5 @@
 <script>
-import { h } from 'vue'
+import { h, createVNode } from 'vue'
 export default {
   render() {
     const items = this.$slots.default()
@@ -8,10 +8,12 @@ export default {
     items.forEach((item, i) => {
       dymanicItems.push(item)
       if (i < items.length - 1) {
-        dymanicItems.push(h('i', { class: 'iconfont icon-angle-right' }))
+        dymanicItems.push(
+          createVNode('i', { class: 'iconfont icon-angle-right' })
+        )
       }
     })
-    return h('div', { class: 'xtx-bread' }, dymanicItems)
+    return createVNode('div', { class: 'xtx-bread' }, dymanicItems)
   },
 }
 </script>
