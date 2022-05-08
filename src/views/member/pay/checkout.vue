@@ -1,5 +1,6 @@
 <template>
-  <div class="xtx-pay-checkout-page">
+  <XtxLoading v-if="!order" />
+  <div v-else class="xtx-pay-checkout-page">
     <div class="container">
       <XtxBread>
         <XtxBreadItem to="/">首页</XtxBreadItem>
@@ -11,7 +12,7 @@
         <h3 class="box-title">收货地址</h3>
         <div class="box-body">
           <!-- 收货地址组件 -->
-          <CheckoutAddress />
+          <CheckoutAddress :list="order.userAddresses" />
         </div>
         <!-- 商品信息 -->
         <h3 class="box-title">商品信息</h3>
@@ -27,23 +28,20 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="i in 4" :key="i">
+              <tr v-for="item in order.goods" :key="item.id">
                 <td>
                   <a href="javascript:;" class="info">
-                    <img
-                      src="https://yanxuan-item.nosdn.127.net/cd9b2550cde8bdf98c9d083d807474ce.png"
-                      alt=""
-                    />
+                    <img :src="item.picture" alt="" />
                     <div class="right">
-                      <p>轻巧多用锅雪平锅 麦饭石不粘小奶锅煮锅</p>
-                      <p>颜色：白色 尺寸：10cm 产地：日本</p>
+                      <p>{{ item.name }}</p>
+                      <p>{{ item.attrsText }}</p>
                     </div>
                   </a>
                 </td>
-                <td>&yen;100.00</td>
-                <td>2</td>
-                <td>&yen;200.00</td>
-                <td>&yen;200.00</td>
+                <td>&yen;{{ item.price }}</td>
+                <td>{{ item.count }}</td>
+                <td>&yen;{{ item.totalPrice }}</td>
+                <td>&yen;{{ item.totalPayPrice }}</td>
               </tr>
             </tbody>
           </table>
@@ -100,19 +98,23 @@
           <div class="total">
             <dl>
               <dt>商品件数：</dt>
-              <dd>5件</dd>
+              <dd>{{ order.summary.goodsCount }}件</dd>
             </dl>
             <dl>
               <dt>商品总价：</dt>
-              <dd>¥5697.00</dd>
+              <dd>¥{{ order.summary.totalPrice }}</dd>
             </dl>
             <dl>
               <dt>运<i></i>费：</dt>
-              <dd>¥0.00</dd>
+              <dd>¥{{ order.summary.postFee }}</dd>
+            </dl>
+            <dl v-if="order.summary.discountPrice">
+              <dt>打折价：</dt>
+              <dd>-¥{{ order.summary.discountPrice }}</dd>
             </dl>
             <dl>
               <dt>应付总额：</dt>
-              <dd class="price">¥5697.00</dd>
+              <dd class="price">¥{{ order.summary.totalPayPrice }}</dd>
             </dl>
           </div>
         </div>
@@ -125,11 +127,20 @@
   </div>
 </template>
 <script setup>
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import XtxButton from '@/components/library/xtx-button.vue'
 import XtxBread from '@/components/library/xtx-bread.vue'
 import XtxBreadItem from '@/components/library/xtx-bread-item.vue'
 import CheckoutAddress from './components/checkout-address.vue'
+import { createOrder } from '@/api/order'
+import XtxLoading from '@/components/library/xtx-loading.vue'
+
+// 结算生成订单-获取订单信息
+const order = ref(null)
+onMounted(async () => {
+  const { result } = await createOrder()
+  order.value = result
+})
 
 // 配送时间点击事件
 const deliveryTime = ref('oneTime')
@@ -142,6 +153,7 @@ const pay = (meth) => {
   payMethod.value = meth
 }
 </script>
+
 <style scoped lang="less">
 .fade {
   transition: all 0.5s;

@@ -1,15 +1,20 @@
 <template>
   <div class="checkout-address">
     <div class="text">
-      <!-- <div class="none">您需要先添加收货地址才可提交订单。</div> -->
-      <ul>
+      <div v-if="!showAddress" class="none">
+        您需要先添加收货地址才可提交订单。
+      </div>
+      <ul v-if="showAddress">
         <li>
-          <span>收<i />货<i />人：</span>朱超
+          <span>收<i />货<i />人：</span>{{ showAddress.receiver }}
         </li>
-        <li><span>联系方式：</span>132****2222</li>
-        <li><span>收货地址：</span>海南省三亚市解放路108号物质大厦1003室</li>
+        <li><span>联系方式：</span>{{ hidePhone(showAddress.contact) }}</li>
+        <li>
+          <span>收货地址：</span>{{ showAddress.fullLocation
+          }}{{ showAddress.address }}
+        </li>
       </ul>
-      <a href="javascript:;">修改地址</a>
+      <a v-if="showAddress" href="javascript:;">修改地址</a>
     </div>
     <div class="action">
       <XtxButton class="btn">切换地址</XtxButton>
@@ -18,7 +23,36 @@
   </div>
 </template>
 <script setup>
+import { ref } from 'vue'
 import XtxButton from '@/components/library/xtx-button.vue'
+const props = defineProps({
+  list: {
+    // 收货地址列表
+    type: Array,
+    default: () => [],
+  },
+})
+
+/*
+1. 找到默认收货地址
+2. 没有默认地址，就使用第一条收货地址
+3. 如没有数据，就提示添加地址
+*/
+const addressList = props.list
+const showAddress = ref(null)
+const defaultAddress = addressList.find((item) => item.isDefault === 0)
+if (defaultAddress) {
+  showAddress.value = defaultAddress
+} else {
+  if (props.list.length) {
+    showAddress.value = addressList[0]
+  }
+}
+
+// 电话号码部分隐藏
+const hidePhone = (phone) => {
+  return phone.replace(phone.slice(3, 7), '****')
+}
 </script>
 <style scoped lang="less">
 .checkout-address {
