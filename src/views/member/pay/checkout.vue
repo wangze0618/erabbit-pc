@@ -88,9 +88,11 @@
             href="javascript:;"
             >货到付款</a
           >
-          <span v-show="payMethod == 'payTo'" style="color: #999"
-            >货到付款需付5元手续费</span
-          >
+          <transition mode="out-in" name="fade">
+            <span v-if="payMethod == 'payTo'" style="color: #999"
+              >货到付款需付5元手续费</span
+            >
+          </transition>
         </div>
         <!-- 金额明细 -->
         <h3 class="box-title">金额明细</h3>
@@ -155,10 +157,23 @@ const pay = (meth) => {
 </script>
 
 <style scoped lang="less">
-.fade {
+.fade-enter-active {
   transition: all 0.5s;
+  padding-top: 20px;
 }
 
+.fade-leave-active {
+  transition: all 0.5s;
+  padding-top: 20px;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+.fade-enter-to,
+.fade-leave-from {
+  opacity: 1;
+}
 .xtx-pay-checkout-page {
   .wrapper {
     background: #fff;
@@ -172,6 +187,11 @@ const pay = (meth) => {
     }
     .box-body {
       padding: 20px 0;
+      a {
+        &:hover {
+          color: @xtxColor;
+        }
+      }
     }
   }
 }

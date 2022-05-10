@@ -49,7 +49,7 @@ const router = createRouter({
   routes,
   scrollBehavior(to, from, savedPosition) {
     // 始终滚动到顶部
-    return { top: 0, behavior: 'smooth' }
+    return { top: 0 }
   },
 })
 

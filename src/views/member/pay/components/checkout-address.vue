@@ -21,10 +21,20 @@
       <XtxButton class="btn">添加地址</XtxButton>
     </div>
   </div>
+  <!-- 对话框组件 -->
+  <XtxDialog title="切换收货地址">
+    <template #default> 111 </template>
+    <template #footer>
+      <XtxButton type="gray" style="margin-right: 20px">取消</XtxButton>
+      <XtxButton type="primary">确认</XtxButton>
+    </template>
+  </XtxDialog>
 </template>
+
 <script setup>
 import { ref } from 'vue'
 import XtxButton from '@/components/library/xtx-button.vue'
+import XtxDialog from '@/components/library/xtx-dialog.vue'
 const props = defineProps({
   list: {
     // 收货地址列表
