@@ -23,7 +23,20 @@
   </div>
   <!-- 对话框组件 -->
   <XtxDialog title="切换收货地址" v-model:visible="showDialog">
-    <template #default> 111 </template>
+    <template #default>
+      <div class="text item dialogBody" v-for="item in list" :key="item.id">
+        <ul>
+          <li>
+            <span>收<i />货<i />人：</span>{{ item.receiver }}
+          </li>
+          <li><span>联系方式：</span>{{ hidePhone(item.contact) }}</li>
+          <li>
+            <span>收货地址：</span
+            >{{ item.fullLocation.replace(/ /g, '') + item.address }}
+          </li>
+        </ul>
+      </div>
+    </template>
     <template #footer>
       <XtxButton type="gray" style="margin-right: 20px">取消</XtxButton>
       <XtxButton type="primary">确认</XtxButton>
@@ -42,8 +55,7 @@ const props = defineProps({
     default: () => [],
   },
 })
-
-const showDialog = ref(true)
+const emit = defineEmits(['change'])
 /*
 1. 找到默认收货地址
 2. 没有默认地址，就使用第一条收货地址
@@ -59,13 +71,34 @@ if (defaultAddress) {
     showAddress.value = addressList[0]
   }
 }
+const showDialog = ref(false)
+
+// 通知父组件-默认地址的id
+emit('change', showAddress.value && showAddress.value.id)
 
 // 电话号码部分隐藏
 const hidePhone = (phone) => {
-  return phone.replace(phone.slice(3, 7), '****')
+  return phone.substring(0, 3) + '****' + phone.substr(phone.length - 4)
 }
 </script>
 <style scoped lang="less">
+.dialogBody {
+  // &.item {
+  border: 1px solid #f5f5f5;
+  margin-bottom: 10px;
+  cursor: pointer;
+  &.active,
+  &:hover {
+    border-color: @xtxColor;
+    background: lighten(@xtxColor, 50%);
+  }
+  > ul {
+    padding: 10px;
+    font-size: 14px;
+    line-height: 30px;
+  }
+  // }
+}
 .checkout-address {
   border: 1px solid #f5f5f5;
   display: flex;
