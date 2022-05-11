@@ -17,12 +17,12 @@
       <a v-if="showAddress" href="javascript:;">修改地址</a>
     </div>
     <div class="action">
-      <XtxButton class="btn">切换地址</XtxButton>
+      <XtxButton @click="showDialog = true" class="btn">切换地址</XtxButton>
       <XtxButton class="btn">添加地址</XtxButton>
     </div>
   </div>
   <!-- 对话框组件 -->
-  <XtxDialog title="切换收货地址">
+  <XtxDialog title="切换收货地址" v-model:visible="showDialog">
     <template #default> 111 </template>
     <template #footer>
       <XtxButton type="gray" style="margin-right: 20px">取消</XtxButton>
@@ -43,6 +43,7 @@ const props = defineProps({
   },
 })
 
+const showDialog = ref(true)
 /*
 1. 找到默认收货地址
 2. 没有默认地址，就使用第一条收货地址

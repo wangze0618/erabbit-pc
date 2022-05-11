@@ -1,10 +1,14 @@
 <template>
-  <div class="xtx-dialog" :class="{ fade }">
-    <div class="wrapper" :class="{ fade }">
+  <div class="xtx-dialog" v-if="visible" :class="{ fade: fade == true }">
+    <div class="wrapper" :class="{ fade: fade == true }">
       <!-- 标题 -->
       <div class="header">
         <h3>{{ title }}</h3>
-        <a href="JavaScript:;" class="iconfont icon-close-new"></a>
+        <a
+          @click="closeDialog()"
+          href="JavaScript:;"
+          class="iconfont icon-close-new"
+        ></a>
       </div>
       <!-- 主内容 -->
       <div class="body">
@@ -18,8 +22,7 @@
   </div>
 </template>
 <script setup>
-import { ref, onMounted, useAttrs, useSlots } from 'vue'
-import XtxButton from './xtx-button.vue'
+import { ref, onMounted, useAttrs, useSlots, watch } from 'vue'
 
 // 定义props
 const props = defineProps({
@@ -27,17 +30,30 @@ const props = defineProps({
     type: String,
     default: 'Dialog',
   },
+  visible: {
+    type: Boolean,
+    default: true,
+  },
 })
-
-console.log(useSlots().default())
-console.log(useSlots().footer())
-// 结构和样式同时加上无过度效果，需要些延时。
+const emit = defineEmits()
 const fade = ref(false)
-onMounted(() => {
-  setTimeout(() => {
-    fade.value = true
-  }, 0)
-})
+watch(
+  () => props.visible,
+  (newVal) => {
+    // 结构和样式同时加上无过度效果，需要些延时。
+    setTimeout(() => {
+      fade.value = newVal
+    }, 0)
+  },
+  {
+    immediate: true,
+  }
+)
+const closeDialog = () => {
+  emit('update:visible', false)
+}
+// console.log(useSlots().default())
+// console.log(useSlots().footer())
 </script>
 
 <style scoped lang="less">
@@ -58,7 +74,7 @@ onMounted(() => {
   .wrapper {
     width: 600px;
     background: #fff;
-    border-radius: 4px;
+    border-radius: 5px;
     position: absolute;
     top: 50%;
     left: 50%;
