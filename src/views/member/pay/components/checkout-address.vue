@@ -17,14 +17,20 @@
       <a v-if="showAddress" href="javascript:;">修改地址</a>
     </div>
     <div class="action">
-      <XtxButton @click="showDialog = true" class="btn">切换地址</XtxButton>
-      <XtxButton class="btn">添加地址</XtxButton>
+      <XtxButton @click="openDialog()" class="btn">切换地址</XtxButton>
+      <XtxButton @click="openAddressEdit()" class="btn">添加地址</XtxButton>
     </div>
   </div>
   <!-- 对话框组件 -->
   <XtxDialog title="切换收货地址" v-model:visible="showDialog">
     <template #default>
-      <div class="text item dialogBody" v-for="item in list" :key="item.id">
+      <div
+        @click="selectedAddress = item"
+        class="text item dialogBody"
+        :class="{ active: selectedAddress.id == item.id }"
+        v-for="item in list"
+        :key="item.id"
+      >
         <ul>
           <li>
             <span>收<i />货<i />人：</span>{{ item.receiver }}
@@ -38,16 +44,25 @@
       </div>
     </template>
     <template #footer>
-      <XtxButton type="gray" style="margin-right: 20px">取消</XtxButton>
-      <XtxButton type="primary">确认</XtxButton>
+      <XtxButton
+        @click="showDialog = false"
+        type="gray"
+        style="margin-right: 20px"
+        >取消</XtxButton
+      >
+      <XtxButton @click="confirmAddress()" type="primary">确认</XtxButton>
     </template>
   </XtxDialog>
+
+  <!--  收货地址添加编辑组件 -->
+  <AddressEdit ref="addressEditCom" />
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { nextTick, onMounted, reactive, ref } from 'vue'
 import XtxButton from '@/components/library/xtx-button.vue'
 import XtxDialog from '@/components/library/xtx-dialog.vue'
+import AddressEdit from './address-edit.vue'
 const props = defineProps({
   list: {
     // 收货地址列表
@@ -73,12 +88,36 @@ if (defaultAddress) {
 }
 const showDialog = ref(false)
 
+// 切换地址
+const openDialog = () => {
+  showDialog.value = true
+}
+
+// 添加编辑收货地址组件
+const addressEditCom = ref(null)
+const openAddressEdit = () => {
+  addressEditCom.value.open()
+}
 // 通知父组件-默认地址的id
-emit('change', showAddress.value && showAddress.value.id)
+emit('change', showAddress.value?.id)
+
+// 记录当前选中的地址Id
+const selectedAddress = ref('null')
+
+// 确认地址
+const confirmAddress = () => {
+  try {
+    showAddress.value = selectedAddress.value
+    emit('change', selectedAddress.value?.id)
+    showDialog.value = false
+  } catch (error) {}
+}
 
 // 电话号码部分隐藏
 const hidePhone = (phone) => {
-  return phone.substring(0, 3) + '****' + phone.substr(phone.length - 4)
+  if (phone) {
+    return phone.substring(0, 3) + '****' + phone.substr(phone.length - 4)
+  }
 }
 </script>
 <style scoped lang="less">

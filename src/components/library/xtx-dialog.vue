@@ -22,7 +22,7 @@
   </div>
 </template>
 <script setup>
-import { ref, onMounted, useAttrs, useSlots, watch } from 'vue'
+import { ref, watch } from 'vue'
 
 // 定义props
 const props = defineProps({
