@@ -7,3 +7,15 @@ import request from '@/utils/request'
 export const createOrder = () => {
   return request('/member/order/pre', 'get')
 }
+
+// 添加收货地址
+// 2022年5月15日 22:23:19
+export const addAddress = (data) => {
+  return request('/member/address', 'post', data)
+}
+
+// 获取收货地址列表
+// 2022年5月15日 22:48:43
+export const getAddress = () => {
+  return request('/member/address', 'get')
+}

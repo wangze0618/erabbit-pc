@@ -5,7 +5,7 @@
       @click="visible ? close() : open()"
       :class="{ active: visible }"
     >
-      <span v-if="!fullLocation" class="placeholder">请选择配送地址</span>
+      <span v-if="!fullLocation" class="placeholder">{{ placeholder }}</span>
       <span v-else class="value">{{ fullLocation }}</span>
       <i class="iconfont icon-angle-down"></i>
     </div>
@@ -32,6 +32,10 @@ const props = defineProps({
   fullLocation: {
     type: String,
     default: '',
+  },
+  placeholder: {
+    type: String,
+    default: '请选择配送地址',
   },
 })
 const emit = defineEmits(['change'])
@@ -109,7 +113,9 @@ const changeItem = (item) => {
     close()
     changeResult.fullLocation =
       changeResult.provinceName +
+      ' ' +
       changeResult.cityName +
+      ' ' +
       changeResult.countyName
     emit('change', changeResult)
   }

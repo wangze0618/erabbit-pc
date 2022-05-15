@@ -7,37 +7,64 @@
           <div class="xtx-form-item">
             <div class="label">收货人：</div>
             <div class="field">
-              <input class="input" placeholder="请输入收货人" />
+              <input
+                v-model="formData.receiver"
+                class="input"
+                placeholder="请输入收货人"
+              />
             </div>
           </div>
           <div class="xtx-form-item">
             <div class="label">手机号：</div>
             <div class="field">
-              <input class="input" placeholder="请输入手机号" />
+              <input
+                v-model="formData.contact"
+                class="input"
+                type="tel"
+                maxlength="11"
+                placeholder="请输入手机号"
+              />
             </div>
           </div>
           <div class="xtx-form-item">
             <div class="label">地区：</div>
             <div class="field">
-              <XtxCity placeholder="请选择所在地区" />
+              <XtxCity
+                :fullLocation="formData.fullLocation"
+                @change="changeCity($event)"
+                placeholder="请选择所在地区"
+              />
             </div>
           </div>
           <div class="xtx-form-item">
             <div class="label">详细地址：</div>
             <div class="field">
-              <input class="input" placeholder="请输入详细地址" />
+              <input
+                v-model="formData.address"
+                class="input"
+                placeholder="请输入详细地址"
+              />
             </div>
           </div>
           <div class="xtx-form-item">
             <div class="label">邮政编码：</div>
             <div class="field">
-              <input class="input" placeholder="请输入邮政编码" />
+              <input
+                v-model="formData.postalCode"
+                class="input"
+                maxlength="6"
+                placeholder="请输入邮政编码"
+              />
             </div>
           </div>
           <div class="xtx-form-item">
             <div class="label">地址标签：</div>
             <div class="field">
-              <input class="input" placeholder="请输入地址标签，逗号分隔" />
+              <input
+                v-model="formData.addressTags"
+                class="input"
+                placeholder="请输入地址标签，逗号分隔"
+              />
             </div>
           </div>
         </div>
@@ -45,23 +72,68 @@
     </template>
     <!-- 底部按钮 -->
     <template #footer>
-      <XtxButton type="gray" style="margin-right: 20px">取消</XtxButton>
-      <XtxButton type="primary">确认</XtxButton>
+      <XtxButton
+        @click="dialogVisible = false"
+        type="gray"
+        style="margin-right: 20px"
+        >取消</XtxButton
+      >
+      <XtxButton @click="submit()" type="primary">确认</XtxButton>
     </template>
   </XtxDialog>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
 import XtxDialog from '@/components/library/xtx-dialog.vue'
 import XtxButton from '@/components/library/xtx-button.vue'
 import XtxCity from '@/components/library/xtx-city.vue'
+import { addAddress, getAddress } from '@/api/order.js'
+import Message from '@/components/library/Message'
 const dialogVisible = ref(false)
-
-// 打开函数
-const open = () => {
-  dialogVisible.value = true
+const emit = defineEmits(['on-success'])
+// 定义表单数据对象
+const formData = reactive({
+  receiver: '',
+  contact: '',
+  provinceCode: '',
+  cityCode: '',
+  countyCode: '',
+  address: '',
+  postalCode: '',
+  addressTags: '',
+  isDefault: 1,
+  fullLocation: '',
+})
+// 城市选中
+const changeCity = (result) => {
+  formData.provinceCode = result.provinceCode
+  formData.cityCode = result.cityCode
+  formData.countyCode = result.countyCode
+  formData.fullLocation = result.fullLocation
 }
+// 打开函数
+const open = async () => {
+  dialogVisible.value = true
+  for (const key in formData) {
+    if (key === 'isDefault') {
+      formData[key] = 1
+    } else {
+      formData[key] = ''
+    }
+  }
+}
+
+// 添加时候的提交操作（修改）
+const submit = async () => {
+  try {
+    const { result } = await addAddress(formData)
+    Message({ type: 'success', text: '添加收货地址成功' })
+    dialogVisible.value = false
+    emit('on-success', formData)
+  } catch (error) {}
+}
+
 defineExpose({
   open,
 })
@@ -120,19 +192,22 @@ defineExpose({
 //     }
 //   }
 // }
-.xtx-city {
+:deep(.xtx-city) {
   width: 320px;
-  :deep(.select) {
-    height: 50px;
+  height: 50px;
+  .select {
+    border: 1px solid #e4e4e4;
+    height: 50px !important;
     line-height: 48px;
     display: flex;
     padding: 0 10px;
     justify-content: space-between;
     .placeholder {
-      color: #ccc;
+      color: #888 !important;
+      height: 100%;
     }
     i {
-      color: #ccc;
+      color: #888;
       font-size: 18px;
     }
     .value {

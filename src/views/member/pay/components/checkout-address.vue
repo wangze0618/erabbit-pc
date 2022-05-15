@@ -55,7 +55,7 @@
   </XtxDialog>
 
   <!--  收货地址添加编辑组件 -->
-  <AddressEdit ref="addressEditCom" />
+  <AddressEdit ref="addressEditCom" @on-success="successFn($event)" />
 </template>
 
 <script setup>
@@ -63,6 +63,7 @@ import { nextTick, onMounted, reactive, ref } from 'vue'
 import XtxButton from '@/components/library/xtx-button.vue'
 import XtxDialog from '@/components/library/xtx-dialog.vue'
 import AddressEdit from './address-edit.vue'
+import { getAddress } from '@/api/order'
 const props = defineProps({
   list: {
     // 收货地址列表
@@ -91,6 +92,11 @@ const showDialog = ref(false)
 // 切换地址
 const openDialog = () => {
   showDialog.value = true
+}
+
+const successFn = (data) => {
+  const dataObj = JSON.stringify(data)
+  props.list.unshift(JSON.parse(dataObj))
 }
 
 // 添加编辑收货地址组件
