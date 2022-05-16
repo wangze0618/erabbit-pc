@@ -19,3 +19,15 @@ export const addAddress = (data) => {
 export const getAddress = () => {
   return request('/member/address', 'get')
 }
+
+// 更新收货地址
+// 2022年5月16日 20:55:40
+export const updateAddress = (formData) => {
+  return request(`/member/address/${formData.id}`, 'put', formData)
+}
+
+// 结算页-提交订单
+// 2022年5月16日 21:41:26
+export const submitOrder = (data) => {
+  return request(`/member/order`, 'post', data)
+}

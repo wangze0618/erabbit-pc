@@ -113,9 +113,7 @@ const changeItem = (item) => {
     close()
     changeResult.fullLocation =
       changeResult.provinceName +
-      ' ' +
       changeResult.cityName +
-      ' ' +
       changeResult.countyName
     emit('change', changeResult)
   }

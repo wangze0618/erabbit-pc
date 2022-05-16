@@ -125,26 +125,31 @@
         </div>
         <!-- 提交订单 -->
         <div class="submit">
-          <XtxButton type="primary">提交订单</XtxButton>
+          <XtxButton @click="submit" type="primary">提交订单</XtxButton>
         </div>
       </div>
     </div>
   </div>
 </template>
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, reactive, ref } from 'vue'
 import XtxButton from '@/components/library/xtx-button.vue'
 import XtxBread from '@/components/library/xtx-bread.vue'
 import XtxBreadItem from '@/components/library/xtx-bread-item.vue'
 import CheckoutAddress from './components/checkout-address.vue'
-import { createOrder } from '@/api/order'
+import { createOrder, submitOrder } from '@/api/order'
 import XtxLoading from '@/components/library/xtx-loading.vue'
-
+import Message from '@/components/library/Message'
+import { useRouter } from 'vue-router'
 // 结算生成订单-获取订单信息
 const order = ref(null)
 onMounted(async () => {
   const { result } = await createOrder()
   order.value = result
+  reqParams.goods = result.goods.map(({ skuId, count }) => ({
+    skuId,
+    count,
+  }))
 })
 
 // 配送时间点击事件
@@ -158,10 +163,38 @@ const pay = (meth) => {
   payMethod.value = meth
 }
 
-// 更改收货地址
+// 结算功能-提交订单-提交信息
 const addressId = ref(null)
+const reqParams = reactive({
+  addressId,
+  deliveryTimeType: 1,
+  payType: 1,
+  payChannel: 1,
+  buyerMessage: '',
+  goods: [],
+})
+
+// 更改收货地址
 const changeAddress = (id) => {
   addressId.value = id
+}
+
+// 提交订单
+const router = useRouter()
+const submit = async () => {
+  if (!reqParams.addressId) {
+    Message({ type: 'warn', text: '请选择收货地址' })
+  } else {
+    try {
+      // 提交成功
+      const { result } = await submitOrder(reqParams)
+      Message({ type: 'success', text: '提交订单成功' })
+      // 进行跳转
+      router.push({ path: '/member/pay', query: { orderId: result.id } })
+      // router.push(`/member/pay?orderId=${result.id}`)
+      console.log(result)
+    } catch (error) {}
+  }
 }
 </script>
 

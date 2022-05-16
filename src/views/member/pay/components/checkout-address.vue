@@ -14,11 +14,16 @@
           }}{{ showAddress.address }}
         </li>
       </ul>
-      <a v-if="showAddress" href="javascript:;">修改地址</a>
+      <a
+        v-if="showAddress"
+        @click="openAddressEdit(showAddress)"
+        href="javascript:;"
+        >修改地址</a
+      >
     </div>
     <div class="action">
       <XtxButton @click="openDialog()" class="btn">切换地址</XtxButton>
-      <XtxButton @click="openAddressEdit()" class="btn">添加地址</XtxButton>
+      <XtxButton @click="openAddressEdit({})" class="btn">添加地址</XtxButton>
     </div>
   </div>
   <!-- 对话框组件 -->
@@ -95,14 +100,21 @@ const openDialog = () => {
 }
 
 const successFn = (data) => {
-  const dataObj = JSON.stringify(data)
-  props.list.unshift(JSON.parse(dataObj))
+  const address = props.list.find((item) => item.id === data.id)
+  if (address) {
+    for (const key in address) {
+      address[key] = data[key]
+    }
+  } else {
+    const dataObj = JSON.stringify(data)
+    props.list.unshift(JSON.parse(dataObj))
+  }
 }
 
 // 添加编辑收货地址组件
 const addressEditCom = ref(null)
-const openAddressEdit = () => {
-  addressEditCom.value.open()
+const openAddressEdit = (address) => {
+  addressEditCom.value.open(address)
 }
 // 通知父组件-默认地址的id
 emit('change', showAddress.value?.id)

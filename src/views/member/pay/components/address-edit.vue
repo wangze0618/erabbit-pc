@@ -1,5 +1,8 @@
 <template>
-  <XtxDialog title="添加收货地址" v-model:visible="dialogVisible">
+  <XtxDialog
+    :title="`${formData.id ? '修改' : '添加'}收货地址`"
+    v-model:visible="dialogVisible"
+  >
     <!-- 表单 -->
     <template #default>
       <div class="address-edit">
@@ -88,7 +91,7 @@ import { reactive, ref } from 'vue'
 import XtxDialog from '@/components/library/xtx-dialog.vue'
 import XtxButton from '@/components/library/xtx-button.vue'
 import XtxCity from '@/components/library/xtx-city.vue'
-import { addAddress, getAddress } from '@/api/order.js'
+import { addAddress, getAddress, updateAddress } from '@/api/order.js'
 import Message from '@/components/library/Message'
 const dialogVisible = ref(false)
 const emit = defineEmits(['on-success'])
@@ -113,25 +116,44 @@ const changeCity = (result) => {
   formData.fullLocation = result.fullLocation
 }
 // 打开函数
-const open = async () => {
+const open = (address) => {
   dialogVisible.value = true
-  for (const key in formData) {
-    if (key === 'isDefault') {
-      formData[key] = 1
-    } else {
-      formData[key] = ''
+  if (address.id) {
+    // 修改
+    for (const key in address) {
+      formData[key] = address[key]
+    }
+  } else {
+    // 添加
+    for (const key in formData) {
+      if (key === 'isDefault') {
+        formData[key] = 1
+      } else {
+        formData[key] = ''
+      }
     }
   }
 }
 
 // 添加时候的提交操作（修改）
 const submit = async () => {
-  try {
-    const { result } = await addAddress(formData)
-    Message({ type: 'success', text: '添加收货地址成功' })
-    dialogVisible.value = false
-    emit('on-success', formData)
-  } catch (error) {}
+  if (formData.id) {
+    // 修改
+    try {
+      const { result } = await updateAddress(formData)
+      Message({ type: 'success', text: '修改收货地址成功' })
+      emit('on-success', formData)
+    } catch (error) {}
+  } else {
+    // 添加
+    try {
+      const { result } = await addAddress(formData)
+      formData.id = result.id
+      Message({ type: 'success', text: '添加收货地址成功' })
+      emit('on-success', formData)
+    } catch (error) {}
+  }
+  dialogVisible.value = false
 }
 
 defineExpose({
