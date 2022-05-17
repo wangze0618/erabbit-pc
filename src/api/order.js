@@ -31,3 +31,9 @@ export const updateAddress = (formData) => {
 export const submitOrder = (data) => {
   return request(`/member/order`, 'post', data)
 }
+
+// 获取订单详情
+// 2022年5月17日 22:06:52
+export const findOrderDetail = (id) => {
+  return request(`/member/order/${id}`, 'get')
+}

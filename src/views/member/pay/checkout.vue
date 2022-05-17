@@ -192,7 +192,6 @@ const submit = async () => {
       // 进行跳转
       router.push({ path: '/member/pay', query: { orderId: result.id } })
       // router.push(`/member/pay?orderId=${result.id}`)
-      console.log(result)
     } catch (error) {}
   }
 }

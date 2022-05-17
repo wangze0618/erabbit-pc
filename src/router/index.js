@@ -11,7 +11,7 @@ const Login = () => import('@/views/login/index.vue')
 const ErrorPage = () => import('@/views/404.vue')
 const Cart = () => import('@/views/cart/index.vue')
 const CheckOut = () => import('@/views/member/pay/checkout.vue')
-
+const Pay = () => import('@/views/member/pay/index.vue')
 // 路由规则
 const routes = [
   // 一级路由
@@ -25,6 +25,7 @@ const routes = [
       { path: '/product/:id', component: Goods },
       { path: '/cart', component: Cart },
       { path: '/member/checkout', component: CheckOut },
+      { path: '/member/pay', component: Pay },
     ],
   },
   {
