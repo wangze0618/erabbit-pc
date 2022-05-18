@@ -15,7 +15,7 @@
             支付还剩 <span>{{ timeText }}</span
             >, 超时后将取消订单
           </p>
-          <p v-else>订单已超时</p>
+          <p v-else class="timeOut">订单已超时</p>
         </div>
         <div class="amount">
           <span>应付总额：</span>
@@ -23,7 +23,7 @@
         </div>
       </div>
       <!-- 付款方式 -->
-      <div class="pay-type">
+      <div class="pay-type" v-if="order.countdown > -1">
         <p class="head">选择以下支付方式付款</p>
         <div class="item">
           <p>支付平台</p>
@@ -33,6 +33,7 @@
             title="支付宝支付"
             :href="payUrl"
             target="_blank"
+            @click="openDialog"
           ></a>
         </div>
         <div class="item">
@@ -45,20 +46,42 @@
         </div>
       </div>
     </div>
+    <!-- <PayWait v-model.visible="showPaywait"></PayWait> -->
+    <XtxDialog title="正在支付..." v-model:visible="DialogVisible">
+      <template #default>
+        <div class="pay-wait" v-if="order">
+          <img src="@/assets/images/load.gif" alt="" />
+          <div>
+            <p>如果支付成功：</p>
+            <RouterLink :to="`/member/order/${order.id}`"
+              >查看订单详情></RouterLink
+            >
+            <p>如果支付失败：</p>
+            <RouterLink to="/">查看相关疑问></RouterLink>
+          </div>
+        </div>
+      </template>
+    </XtxDialog>
   </div>
 </template>
 <script setup>
 import XtxBread from '@/components/library/xtx-bread.vue'
 import XtxBreadItem from '@/components/library/xtx-bread-item.vue'
-import { onMounted, onUnmounted, ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { onMounted, ref } from 'vue'
+import { useRoute } from 'vue-router'
 import { findOrderDetail } from '@/api/order'
 import { usePayTime } from '@/hooks/index'
 import { baseURL } from '@/utils/request'
+import XtxDialog from '@/components/library/xtx-dialog.vue'
 // 获取订单详情
 const route = useRoute()
-const router = useRouter()
 const order = ref('null')
+
+// 显示支付等待页面
+let DialogVisible = ref(false)
+const openDialog = () => {
+  DialogVisible.value = true
+}
 
 // 倒计时逻辑
 // const timer = ref(1800)
@@ -95,6 +118,21 @@ const payUrl = `${baseURL}/pay/aliPay?orderId=${route.query.orderId}&redirect=${
 console.log(payUrl)
 </script>
 <style scoped lang="less">
+.timeOut {
+  color: red !important;
+}
+
+.pay-wait {
+  display: flex;
+  justify-content: space-around;
+  p {
+    margin-top: 30px;
+    font-size: 14px;
+  }
+  a {
+    color: @xtxColor;
+  }
+}
 .pay-info {
   background: #fff;
   display: flex;

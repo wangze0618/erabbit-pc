@@ -35,7 +35,7 @@ const props = defineProps({
     default: true,
   },
 })
-const emit = defineEmits()
+const emit = defineEmits(['update:visible'])
 const fade = ref(false)
 watch(
   () => props.visible,
@@ -52,8 +52,6 @@ watch(
 const closeDialog = () => {
   emit('update:visible', false)
 }
-// console.log(useSlots().default())
-// console.log(useSlots().footer())
 </script>
 
 <style scoped lang="less">
