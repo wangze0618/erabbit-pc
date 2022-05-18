@@ -2,10 +2,6 @@ const { defineConfig } = require('@vue/cli-service')
 const path = require('path')
 module.exports = defineConfig({
   transpileDependencies: true,
-  devServer: {
-    port: 8080,
-    open: true,
-  },
 
   pluginOptions: {
     'style-resources-loader': {
@@ -24,4 +20,9 @@ module.exports = defineConfig({
   //     .loader('url-loader')
   //     .tap((options) => Object.assign(options, { limit: 10000 }))
   // },
+  devServer: {
+    historyApiFallback: true,
+    allowedHosts: 'all',
+    open: true,
+  },
 })

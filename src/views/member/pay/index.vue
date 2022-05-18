@@ -11,7 +11,11 @@
         <span class="icon iconfont icon-queren2"></span>
         <div class="tip">
           <p>订单提交成功！请尽快完成支付。</p>
-          <p>支付还剩 <span>24分59秒</span>, 超时后将取消订单</p>
+          <p v-if="order.countdown > -1">
+            支付还剩 <span>{{ timeText }}</span
+            >, 超时后将取消订单
+          </p>
+          <p v-else>订单已超时</p>
         </div>
         <div class="amount">
           <span>应付总额：</span>
@@ -23,8 +27,13 @@
         <p class="head">选择以下支付方式付款</p>
         <div class="item">
           <p>支付平台</p>
-          <a class="btn wx" href="javascript:;"></a>
-          <a class="btn alipay" href="javascript:;"></a>
+          <a class="btn wx" title="微信支付" href="javascript:;"></a>
+          <a
+            class="btn alipay"
+            title="支付宝支付"
+            :href="payUrl"
+            target="_blank"
+          ></a>
         </div>
         <div class="item">
           <p>支付方式</p>
@@ -42,38 +51,48 @@
 import XtxBread from '@/components/library/xtx-bread.vue'
 import XtxBreadItem from '@/components/library/xtx-bread-item.vue'
 import { onMounted, onUnmounted, ref } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { findOrderDetail } from '@/api/order'
-import dayjs from 'dayjs'
+import { usePayTime } from '@/hooks/index'
+import { baseURL } from '@/utils/request'
 // 获取订单详情
 const route = useRoute()
+const router = useRouter()
 const order = ref('null')
+
+// 倒计时逻辑
+// const timer = ref(1800)
+// let timeText = ref('')
 
 onMounted(async () => {
   const { result } = await findOrderDetail(route.query.orderId)
   order.value = result
-  timer.value = result.countdown
-  timeText.value = dayjs(timer.value).format('mm分ss秒')
+  // timer.value = result.countdown
+  // timeText.value = dayjs(timer.value).format('mm分ss秒')
+  start(result.countdown)
 })
 
-// 倒计时逻辑
-const timer = ref(0)
-let timeText = ref('')
+const { start, timeText } = usePayTime()
 
-let timeOut
-if (timer.value) {
-  timeOut = setTimeout(() => {
-    timer.value--
-    timeText.value = dayjs(timer.value).format('mm分ss秒')
-    console.log(timer.value)
-    if (timer.value <= 0) {
-      clearTimeout(timeOut)
-    }
-  }, 1000)
-}
-onUnmounted(() => {
-  clearTimeout(timeOut)
-})
+// let timeOut
+// if (timer.value) {
+//   timeOut = setInterval(() => {
+//     timer.value--
+//     timeText.value = dayjs.unix(timer.value).format('mm分ss秒')
+//     console.log(timer.value)
+//     if (timer.value < 0) {
+//       clearTimeout(timeOut)
+//     }
+//   }, 1000)
+// }
+// onUnmounted(() => {
+//   clearTimeout(timeOut)
+// })
+
+const redircet = encodeURIComponent(`${window.location.host}/#/pay/callback`)
+// 支付地址 后台服务基准地址+支付页面地址+订单ID+回跳地址
+const payUrl = `${baseURL}/pay/aliPay?orderId=${route.query.orderId}&redirect=${redircet}`
+console.log(payUrl)
 </script>
 <style scoped lang="less">
 .pay-info {

@@ -1,6 +1,7 @@
 // 提供复用逻辑的函数（钩子）
 import { useIntersectionObserver } from '@vueuse/core'
-import { ref } from 'vue'
+import dayjs from 'dayjs'
+import { ref, onUnmounted } from 'vue'
 
 // 数据懒加载函数 stop() 停止监听
 export const useLazyData = (apiFn) => {
@@ -23,4 +24,31 @@ export const useLazyData = (apiFn) => {
     }
   )
   return { target, data }
+}
+
+// 倒计时
+export const usePayTime = () => {
+  const timer = ref(1800)
+  let timeText = ref('')
+
+  const start = (countdown) => {
+    timer.value = countdown
+    timeText.value = dayjs.unix(timer.value).format('mm分ss秒')
+  }
+
+  let timeOut
+  if (timer.value) {
+    timeOut = setInterval(() => {
+      timer.value--
+      timeText.value = dayjs.unix(timer.value).format('mm分ss秒')
+      if (timer.value < 0) {
+        clearTimeout(timeOut)
+      }
+    }, 1000)
+  }
+
+  onUnmounted(() => {
+    clearTimeout(timeOut)
+  })
+  return { start, timeText }
 }
