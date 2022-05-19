@@ -1,5 +1,5 @@
 <template>
-  <div class="xtx-pay-page">
+  <div class="xtx-pay-page" v-if="order">
     <div class="container">
       <XtxBread>
         <XtxBreadItem to="/">首页</XtxBreadItem>
@@ -7,15 +7,18 @@
         <XtxBreadItem>支付订单</XtxBreadItem>
       </XtxBread>
       <!-- 付款信息 -->
-      <div class="pay-info" v-if="order">
-        <span class="icon iconfont icon-queren2"></span>
-        <div class="tip">
+      <div class="pay-info">
+        <div v-if="order.countdown > -1" class="tip">
+          <span class="icon iconfont icon-queren2"></span>
           <p>订单提交成功！请尽快完成支付。</p>
-          <p v-if="order.countdown > -1">
+          <p>
             支付还剩 <span>{{ timeText }}</span
             >, 超时后将取消订单
           </p>
-          <p v-else class="timeOut">订单已超时</p>
+        </div>
+        <div v-else class="tip">
+          <span class="icon iconfont icon-close"></span>
+          <p class="timeOut">订单已超时</p>
         </div>
         <div class="amount">
           <span>应付总额：</span>
@@ -111,11 +114,12 @@ const { start, timeText } = usePayTime()
 // onUnmounted(() => {
 //   clearTimeout(timeOut)
 // })
-
-const redircet = encodeURIComponent(`${window.location.host}/#/pay/callback`)
+const protocal = window.location.protocol
+const redircet = encodeURIComponent(
+  `${protocal}://${window.location.host}/#/pay/callback`
+)
 // 支付地址 后台服务基准地址+支付页面地址+订单ID+回跳地址
 const payUrl = `${baseURL}/pay/aliPay?orderId=${route.query.orderId}&redirect=${redircet}`
-console.log(payUrl)
 </script>
 <style scoped lang="less">
 .timeOut {
@@ -205,5 +209,8 @@ console.log(payUrl)
         no-repeat center / contain;
     }
   }
+}
+.icon-close {
+  color: red !important;
 }
 </style>
