@@ -130,7 +130,7 @@ export default {
 </script>
 <style scoped lang="less">
 .xtx-carousel {
-margin-left:21px;
+  margin-left: 21px;
   width: 100%;
   height: 100%;
   min-width: 300px;

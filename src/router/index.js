@@ -13,6 +13,8 @@ const Cart = () => import('@/views/cart/index.vue')
 const CheckOut = () => import('@/views/member/pay/checkout.vue')
 const Pay = () => import('@/views/member/pay/index.vue')
 const PayResult = () => import('@/views/member/pay/result.vue')
+const MemberLayout = () => import('@/views/member/Layout.vue')
+const MemberHome = () => import('@/views/member/home/index.vue')
 // 路由规则
 const routes = [
   // 一级路由
@@ -28,6 +30,16 @@ const routes = [
       { path: '/member/checkout', component: CheckOut },
       { path: '/member/pay', component: Pay },
       { path: '/pay/callback', component: PayResult },
+      {
+        path: '/member',
+        component: MemberLayout,
+        children: [
+          {
+            path: '/member',
+            component: MemberHome,
+          },
+        ],
+      },
     ],
   },
   {

@@ -17,7 +17,9 @@
         <p class="tit">订单支付{{ route.query.payResult ? '成功' : '失败' }}</p>
         <p class="tip">我们将尽快为您发货，收货期间请保持手机畅通</p>
         <p>支付方式：<span>支付宝支付</span></p>
-        <p>支付金额：<span class="red-price">¥1899.00</span></p>
+        <p>
+          支付金额：<span class="red-price">¥{{ orderInfo.payMoney }}</span>
+        </p>
         <div class="btn">
           <XtxButton
             @click="$router.push('/member/order')"
@@ -49,7 +51,6 @@ onMounted(async () => {
   const { result } = await findOrderDetail(route.query.orderId)
   orderInfo.value = result
 })
-console.log(orderInfo.value)
 </script>
 <style scoped lang="less">
 .red-price {

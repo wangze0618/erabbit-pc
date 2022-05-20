@@ -225,7 +225,7 @@ export default {
   background: rgba(0, 0, 0, 0.7);
   position: relative;
   z-index: 99;
-  margin-left: -10px;
+  // margin-left: -10px;
   &:hover .layer {
     display: block;
   }

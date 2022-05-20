@@ -27,7 +27,6 @@ import HomeSkeleton from './components/home-skeleton.vue'
 import HomeBrand from './components/home-brand.vue'
 import HomeBanner from './components/home-banner.vue'
 import HomeProduct from './components/home-product.vue'
-import homeSpecial from './components/home-special.vue'
 import HomeSpecial from './components/home-special.vue'
 </script>
 <style scoped lang="less"></style>
