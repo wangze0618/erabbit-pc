@@ -7,9 +7,9 @@ import 'normalize.css'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap/dist/js/bootstrap.bundle.min'
 import '@/assets/styles/common.less'
-
 // 导入UI组件库
 import UI from '@/components/library/index'
+import '@/mock'
 const app = createApp(App)
 
 // 指令-图片懒加载
@@ -48,4 +48,5 @@ app.directive('ShowDefaultImg', {
     }
   },
 })
+
 app.use(store).use(router).use(UI).mount('#app')
