@@ -1,6 +1,6 @@
 import store from '@/store'
-import { createRouter, createWebHashHistory } from 'vue-router'
-
+import { h, render } from 'vue'
+import { createRouter, createWebHashHistory, RouterView } from 'vue-router'
 // 导入组件
 const Layout = () => import('@/views/Layout.vue')
 const Home = () => import('@/views/home/index.vue')
@@ -15,6 +15,8 @@ const Pay = () => import('@/views/member/pay/index.vue')
 const PayResult = () => import('@/views/member/pay/result.vue')
 const MemberLayout = () => import('@/views/member/Layout.vue')
 const MemberHome = () => import('@/views/member/home/index.vue')
+const MemberOrder = () => import('@/views/member/order/index.vue')
+const MemberDetail = () => import('@/views/member/order/detail.vue')
 // 路由规则
 const routes = [
   // 一级路由
@@ -22,6 +24,7 @@ const routes = [
     path: '/',
     component: Layout,
     children: [
+      // 二级路由
       { path: '/', component: Home },
       { path: '/category/:id', component: TopCategory },
       { path: '/category/sub/:id', component: SubCategory },
@@ -34,9 +37,27 @@ const routes = [
         path: '/member',
         component: MemberLayout,
         children: [
+          // 三级路由
           {
             path: '/member',
             component: MemberHome,
+          },
+          // {
+          //   path: '/member/order/',
+          //   component: MemberOrder,
+          // },
+          // {
+          //   path: '/member/order/:id',
+          //   component: MemberDetail,
+          // },
+          {
+            path: '/member/order',
+            // 创建一个RouterView容器形成嵌套关系
+            component: { render: () => h(<RouterView />) },
+            children: [
+              { path: '', component: MemberOrder },
+              { path: ':id', component: MemberDetail },
+            ],
           },
         ],
       },

@@ -34,7 +34,6 @@ import HomeOverview from './components/home-overview.vue'
 import HomePanel from './components/home-panel.vue'
 import { ref, onBeforeMount } from 'vue'
 import GoodsItem from '@/views/category/components/goods-item.vue'
-import request from '@/utils/request'
 import { getCollect } from '@/api/member'
 
 // const goods = {
