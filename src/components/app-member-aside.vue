@@ -1,5 +1,5 @@
 <template>
-  <div class="xtx-member-aside">
+  <div class="xtx-member-aside d-none d-lg-block">
     <div class="user-manage">
       <h4>我的账户</h4>
       <div class="links">
@@ -64,8 +64,8 @@
   }
 }
 .xtx-member-aside {
-  width: 220px;
-  margin-right: 20px;
+  min-width: 200px;
+  margin-right: 10px;
   border-radius: 2px;
   .user-manage {
     background-color: #fff;

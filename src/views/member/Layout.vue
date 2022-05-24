@@ -13,8 +13,9 @@ import AppMemberAside from '@/components/app-member-aside.vue'
 .container {
   display: flex;
   padding-top: 20px;
+  overflow-x: auto;
   .article {
-    width: 1000px;
+    // width: 1000px;
   }
 }
 </style>
