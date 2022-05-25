@@ -37,3 +37,9 @@ export const submitOrder = (data) => {
 export const findOrderDetail = (id) => {
   return request(`/member/order/${id}`, 'get')
 }
+
+// 获取我的订单
+// 2022年5月25日 10:00:53
+export const findOrderList = ({ page = 1, pageSize = 10, orderState = 0 }) => {
+  return request(`/member/order`, 'get', { page, pageSize, orderState })
+}

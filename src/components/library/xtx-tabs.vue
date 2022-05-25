@@ -65,9 +65,9 @@ export default {
   <div class="xtx-tabs">
     <div class="tab-title">
       <a
-        @click="changeActive(title.name)"
+        @click="tabClick(title.name, index)"
         href="javascript:;"
-        :class="{ active: active === title.name }"
+        :class="{ active: active == title.name }"
         v-for="(title, index) in titleList"
         >{{ title.label }}</a
       >
@@ -83,8 +83,8 @@ import { ref, provide } from 'vue'
 export default {
   props: {
     active: {
-      type: String,
-      default: 'all',
+      type: [String, Number, Object],
+      default: '',
     },
   },
   setup(props, { slots, emit }) {
@@ -111,12 +111,13 @@ export default {
     })
 
     // 改变激活tab
-    const changeActive = (name) => {
+    const tabClick = (name, index) => {
       activeName.value = name
-      emit('update:active', name)
+      emit('update:active', { index, name })
+      emit('tabClick', { index, name })
     }
 
-    return { titleList, changeActive, activeName }
+    return { titleList, tabClick, activeName }
   },
 }
 </script>

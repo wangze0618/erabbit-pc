@@ -42,6 +42,7 @@ export const usePayTime = () => {
       timer.value--
       timeText.value = dayjs.unix(timer.value).format('mm分ss秒')
       if (timer.value < 0) {
+        timeText.value = '已过期'
         clearTimeout(timeOut)
       }
     }, 1000)
