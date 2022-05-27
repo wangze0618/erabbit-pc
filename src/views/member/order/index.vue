@@ -21,10 +21,19 @@
         :order="item"
         v-for="(item, index) in orderList"
         :key="item.id"
+        @on-cancel="cancelOrder($event)"
       ></OrderItem>
     </div>
     <!-- 分页组件 -->
-    <XtxPagination v-if="orderList.length !== 0"></XtxPagination>
+    <XtxPagination
+      v-if="orderList.length !== 0"
+      :total="total"
+      :page-size="reqParams.pageSize"
+      :current-page="reqParams.page"
+      @current-change="pageChange($event)"
+    ></XtxPagination>
+    <!-- 取消订单原因组件 -->
+    <OrderCancel ref="cancelOrderItem" :order="order"></OrderCancel>
   </div>
 </template>
 
@@ -39,15 +48,25 @@ import XtxButton from '@/components/library/xtx-button.vue'
 import XtxPagination from '@/components/library/xtx-pagination.vue'
 import OrderItem from './components/order-item.vue'
 import { findOrderList } from '@/api/order'
+import OrderCancel from './components/order-cancel.vue'
 
 export default {
   name: 'MemberOrder',
   setup(props) {
+    // 显示框部分
+    // 取消订单
+    const order = reactive({})
+    const cancelOrderItem = ref('')
+    const cancelOrder = (data) => {
+      order.value = data
+      cancelOrderItem.value.open()
+    }
+
     // 获取数据
     const orderList = ref([])
     const reqParams = reactive({
       page: 1,
-      paheSize: 10,
+      pageSize: 10,
       orderState: 0,
     })
     const showLoading = ref(true)
@@ -60,6 +79,12 @@ export default {
       reqParams.orderState = index
     }
 
+    // 分页切换
+    const total = ref(0)
+    const pageChange = (page) => {
+      reqParams.page = page
+    }
+
     // tab切换监听
     watch(
       () => reqParams,
@@ -67,6 +92,7 @@ export default {
         findOrderList(reqParams).then(({ result }) => {
           orderList.value = result.items
           showLoading.value = false
+          total.value = result.counts
         })
       },
       { immediate: true, deep: true }
@@ -79,6 +105,11 @@ export default {
       reqParams,
       activeIndex,
       showLoading,
+      total,
+      pageChange,
+      cancelOrder,
+      order,
+      cancelOrderItem,
     }
   },
   components: {
@@ -90,6 +121,7 @@ export default {
     XtxPagination,
     OrderItem,
     XtxLoading,
+    OrderCancel,
   },
 }
 </script>

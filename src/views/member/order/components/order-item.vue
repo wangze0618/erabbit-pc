@@ -75,8 +75,16 @@
         <XtxButton v-if="order.orderState === 3" type="primary" size="small"
           >确认收货</XtxButton
         >
-        <p><a href="javascript:;">查看详情</a></p>
-        <p v-if="order.orderState === 1"><a href="javascript:;">取消订单</a></p>
+        <p>
+          <a
+            @click="$router.push(`/member/order/${order.id}`)"
+            href="javascript:;"
+            >查看详情</a
+          >
+        </p>
+        <p @click="$emit('on-cancel', order)" v-if="order.orderState === 1">
+          <a href="javascript:;">取消订单</a>
+        </p>
         <p v-if="showAgainOrder(order.orderState)">
           <a href="javascript:;">再次购买</a>
         </p>
@@ -93,12 +101,18 @@ import { ref, computed } from 'vue'
 import XtxButton from '@/components/library/xtx-button.vue'
 import { orderStatus } from '@/api/constants'
 import { usePayTime } from '@/hooks'
+
 const props = defineProps({
   order: {
     type: Object,
     default: () => {},
   },
 })
+
+const emit = defineEmits(['on-cancel'])
+// const cancelOrder = (order) => {
+//   emit('cancelOrder', order)
+// }
 
 // 显示时间倒计时
 const { timeText, start } = usePayTime()

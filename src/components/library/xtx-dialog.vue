@@ -6,7 +6,7 @@
         <h3>{{ title }}</h3>
         <a
           @click="closeDialog()"
-          href="JavaScript:;"
+          href="javascript:;"
           class="iconfont icon-close-new"
         ></a>
       </div>
