@@ -22,6 +22,7 @@
         v-for="(item, index) in orderList"
         :key="item.id"
         @on-cancel="cancelOrder($event)"
+        @on-delete="deleteOrderFn($event)"
       ></OrderItem>
     </div>
     <!-- 分页组件 -->
@@ -33,7 +34,7 @@
       @current-change="pageChange($event)"
     ></XtxPagination>
     <!-- 取消订单原因组件 -->
-    <OrderCancel ref="cancelOrderItem" :order="order"></OrderCancel>
+    <OrderCancel ref="cancelOrderItem"></OrderCancel>
   </div>
 </template>
 
@@ -47,19 +48,32 @@ import { orderStatus } from '@/api/constants'
 import XtxButton from '@/components/library/xtx-button.vue'
 import XtxPagination from '@/components/library/xtx-pagination.vue'
 import OrderItem from './components/order-item.vue'
-import { findOrderList } from '@/api/order'
+import { findOrderList, deleteOrder } from '@/api/order'
 import OrderCancel from './components/order-cancel.vue'
+import confirmBox from '@/components/library/Confirm'
+import Message from '@/components/library/Message'
 
 export default {
   name: 'MemberOrder',
   setup(props) {
     // 显示框部分
+
     // 取消订单
     const order = reactive({})
     const cancelOrderItem = ref('')
     const cancelOrder = (data) => {
       order.value = data
-      cancelOrderItem.value.open()
+      cancelOrderItem.value.open(data)
+    }
+
+    // 删除订单
+    const deleteOrderFn = async (data) => {
+      try {
+        await confirmBox({ text: '确认删除该订单吗？' })
+        await deleteOrder(data.id)
+        Message({ type: 'success', text: '删除成功' })
+        getList()
+      } catch (error) {}
     }
 
     // 获取数据
@@ -85,15 +99,19 @@ export default {
       reqParams.page = page
     }
 
+    // 获取数据
+    const getList = () => {
+      findOrderList(reqParams).then(({ result }) => {
+        orderList.value = result.items
+        showLoading.value = false
+        total.value = result.counts
+      })
+    }
     // tab切换监听
     watch(
       () => reqParams,
       () => {
-        findOrderList(reqParams).then(({ result }) => {
-          orderList.value = result.items
-          showLoading.value = false
-          total.value = result.counts
-        })
+        getList()
       },
       { immediate: true, deep: true }
     )
@@ -110,6 +128,8 @@ export default {
       cancelOrder,
       order,
       cancelOrderItem,
+      deleteOrderFn,
+      getList,
     }
   },
   components: {

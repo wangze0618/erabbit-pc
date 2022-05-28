@@ -11,6 +11,7 @@
         class="del"
         href="javascript:;"
         v-if="showDeleteOrder(order.orderState)"
+        @click="$emit('on-delete', order)"
         >删除</a
       >
     </div>
@@ -109,10 +110,7 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['on-cancel'])
-// const cancelOrder = (order) => {
-//   emit('cancelOrder', order)
-// }
+const emit = defineEmits(['on-cancel', 'on-delete'])
 
 // 显示时间倒计时
 const { timeText, start } = usePayTime()

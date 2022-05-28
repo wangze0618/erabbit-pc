@@ -27,24 +27,23 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
 import XtxDialog from '@/components/library/xtx-dialog.vue'
 import { cancelReason } from '@/api/constants'
 import XtxButton from '@/components/library/xtx-button.vue'
 import { cancelOrder } from '@/api/order'
 import Message from '@/components/library/Message'
 
-const props = defineProps({
-  order: {
-    type: Object,
-    default: () => {},
-  },
-})
-
 const visible = ref(false)
 // 选中的文字
 const curText = ref('')
+const currOrder = reactive({})
 
+// 打开对话框
+const open = (data) => {
+  visible.value = true
+  currOrder.value = data
+}
 // 取消
 const cancel = () => {
   visible.value = false
@@ -54,15 +53,13 @@ const submit = async () => {
   if (!curText.value) {
     Message({ type: 'warn', text: '请选择取消订单的原因' })
   } else {
-    await cancelOrder(props.order.value.id, curText.value)
+    await cancelOrder(currOrder.value.id, curText.value)
     Message({ type: 'success', text: '取消订单成功' })
+    currOrder.value.orderState = 6
     visible.value = false
   }
 }
-// 打开对话框
-const open = () => {
-  visible.value = true
-}
+
 defineExpose({
   open,
 })
