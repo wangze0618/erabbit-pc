@@ -73,7 +73,11 @@
           size="small"
           >立即付款</XtxButton
         >
-        <XtxButton v-if="order.orderState === 3" type="primary" size="small"
+        <XtxButton
+          @click="$emit('on-confirm', order)"
+          v-if="order.orderState === 3"
+          type="primary"
+          size="small"
           >确认收货</XtxButton
         >
         <p>
@@ -110,7 +114,7 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['on-cancel', 'on-delete'])
+const emit = defineEmits(['on-cancel', 'on-delete', 'on-confirm'])
 
 // 显示时间倒计时
 const { timeText, start } = usePayTime()

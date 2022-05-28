@@ -23,6 +23,7 @@
         :key="item.id"
         @on-cancel="cancelOrder($event)"
         @on-delete="deleteOrderFn($event)"
+        @on-confirm="confirmOrderFn($event)"
       ></OrderItem>
     </div>
     <!-- 分页组件 -->
@@ -76,6 +77,15 @@ export default {
       } catch (error) {}
     }
 
+    // 确认收货
+    const confirmOrderFn = async (data) => {
+      try {
+        await confirmBox({ text: '确认收货吗？' })
+        await deleteOrder(data.id)
+        Message({ type: 'success', text: '确认收货成功' })
+        getList()
+      } catch (error) {}
+    }
     // 获取数据
     const orderList = ref([])
     const reqParams = reactive({
@@ -116,6 +126,7 @@ export default {
       { immediate: true, deep: true }
     )
     return {
+      confirmOrderFn,
       activeName,
       orderStatus,
       orderList,
