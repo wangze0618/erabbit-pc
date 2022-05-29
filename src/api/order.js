@@ -67,3 +67,8 @@ export const deleteOrder = (ids) => {
 export const confirmOrder = (id) => {
   return request(`/member/order/${id}/receipt`, 'get')
 }
+
+// 查看物流
+export const logisticsOrder = (id) => {
+  return request(`/member/order/${id}/logistics`, 'get')
+}

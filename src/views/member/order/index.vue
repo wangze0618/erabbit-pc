@@ -24,6 +24,7 @@
         @on-cancel="cancelOrder($event)"
         @on-delete="deleteOrderFn($event)"
         @on-confirm="confirmOrderFn($event)"
+        @on-logistics="logisticsFn($event)"
       ></OrderItem>
     </div>
     <!-- 分页组件 -->
@@ -36,6 +37,8 @@
     ></XtxPagination>
     <!-- 取消订单原因组件 -->
     <OrderCancel ref="cancelOrderItem"></OrderCancel>
+    <!-- 查看订单组件 -->
+    <OrderLogistics ref="LogisticsItem"></OrderLogistics>
   </div>
 </template>
 
@@ -53,6 +56,7 @@ import { findOrderList, deleteOrder } from '@/api/order'
 import OrderCancel from './components/order-cancel.vue'
 import confirmBox from '@/components/library/Confirm'
 import Message from '@/components/library/Message'
+import OrderLogistics from './components/order-logistics.vue'
 
 export default {
   name: 'MemberOrder',
@@ -86,6 +90,13 @@ export default {
         getList()
       } catch (error) {}
     }
+
+    // 查看物流
+    const LogisticsItem = ref('')
+    const logisticsFn = (data) => {
+      LogisticsItem.value.open(data)
+    }
+
     // 获取数据
     const orderList = ref([])
     const reqParams = reactive({
@@ -141,6 +152,8 @@ export default {
       cancelOrderItem,
       deleteOrderFn,
       getList,
+      logisticsFn,
+      LogisticsItem,
     }
   },
   components: {
@@ -153,6 +166,7 @@ export default {
     OrderItem,
     XtxLoading,
     OrderCancel,
+    OrderLogistics,
   },
 }
 </script>

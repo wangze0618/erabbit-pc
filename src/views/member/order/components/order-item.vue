@@ -50,7 +50,7 @@
       <div class="column state">
         <!-- 订单状态 -->
         <p>{{ orderStatus[order.orderState].label }}</p>
-        <p v-if="order.orderState === 3">
+        <p @click="$emit('on-logistics', order)" v-if="order.orderState === 3">
           <a class="green" href="javascript:;">查看物流</a>
         </p>
         <p v-if="order.orderState === 4">
@@ -114,7 +114,12 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['on-cancel', 'on-delete', 'on-confirm'])
+const emit = defineEmits([
+  'on-cancel',
+  'on-delete',
+  'on-confirm',
+  'on-logistics',
+])
 
 // 显示时间倒计时
 const { timeText, start } = usePayTime()

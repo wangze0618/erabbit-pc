@@ -1,14 +1,21 @@
 <template>
   <div class="member-detail">
-    <h1>Member-Detail</h1>
-    <h2>{{ route.params.id }}</h2>
+    <!-- 头部 -->
+    <DetailAction></DetailAction>
+    <!-- 进度 -->
+    <!-- 物流 -->
+    <!-- 信息 -->
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
-import { useRoute } from 'vue-router'
-const route = useRoute()
+import DetailAction from './components/detail-action.vue'
 </script>
 
-<style scoped lang="less"></style>
+<style scoped lang="less">
+.member-detail {
+  background: #fff !important;
+  height: 100%;
+}
+</style>

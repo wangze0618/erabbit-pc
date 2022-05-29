@@ -125,7 +125,7 @@ export default {
   padding-right: 20px;
 }
 .app-header {
-  background: #fff;
+  background: #fff !important;
   .container {
     height: 100%;
     display: flex;
