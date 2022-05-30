@@ -39,7 +39,6 @@
     "less": "^4.0.0",
     "less-loader": "^8.0.0",
     "lint-staged": "^11.1.2",
-    "postcss-pxtorem": "^5.1.1",
     "style-resources-loader": "^1.4.1",
     "vue-cli-plugin-style-resources-loader": "~0.1.5"
   },
