@@ -111,8 +111,8 @@ export default {
   flex: 1;
 }
 .sticky {
-  height: 80px;
   position: sticky;
+  height: 80px;
   top: 0;
   // left: 0;
   z-index: 999;

@@ -119,7 +119,7 @@ const redircet = encodeURIComponent(
   `${protocal}//${window.location.host}/#/pay/callback`
   // `${window.location.host}/#/pay/callback`
 )
-console.log(redircet)
+// console.log(redircet)
 // 支付地址 后台服务基准地址+支付页面地址+订单ID+回跳地址
 const payUrl = `${baseURL}/pay/aliPay?orderId=${route.query.orderId}&redirect=${redircet}`
 </script>

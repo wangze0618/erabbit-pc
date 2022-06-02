@@ -90,7 +90,6 @@ export default {
         getList()
       } catch (error) {}
     }
-
     // 查看物流
     const LogisticsItem = ref('')
     const logisticsFn = (data) => {

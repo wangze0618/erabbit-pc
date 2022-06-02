@@ -3,6 +3,11 @@ import { useIntersectionObserver } from '@vueuse/core'
 import dayjs from 'dayjs'
 import { ref, onUnmounted } from 'vue'
 
+// 进行电话号码加密（隐藏中间数字）
+export const hideNumber = (num) => {
+  return num.substr(0, 3) + '****' + num.substr(7, 11)
+}
+
 // 数据懒加载函数 stop() 停止监听
 export const useLazyData = (apiFn) => {
   // target 挂载的DOM
@@ -51,5 +56,6 @@ export const usePayTime = () => {
   onUnmounted(() => {
     clearTimeout(timeOut)
   })
+
   return { start, timeText }
 }

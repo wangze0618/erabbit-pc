@@ -2,19 +2,19 @@
   <div class="xtx-steps">
     <div
       class="xtx-steps-item"
-      :class="{ active: active >= index }"
+      :class="{ active: active > index }"
       v-for="(item, index) in dynamicList"
     >
       <div class="step">
-        <span>{{ index }}</span>
+        <span>{{ index + 1 }}</span>
         <div class="title">{{ item.props.title }}</div>
-        <div class="desc">{{ item.props.desc }}</div>
+        <div v-if="active > index" class="desc">{{ item.props.desc }}</div>
       </div>
     </div>
   </div>
 </template>
 <script setup>
-import { useAttrs, useSlots } from 'vue'
+import { useSlots } from 'vue'
 const props = defineProps({
   active: {
     type: Number,
@@ -35,7 +35,6 @@ list.forEach((item) => {
     dynamicList.push(item)
   }
 })
-console.log(dynamicList)
 </script>
 <style lang="less">
 .xtx-steps {

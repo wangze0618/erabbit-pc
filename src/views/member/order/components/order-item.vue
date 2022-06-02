@@ -91,7 +91,11 @@
           <a href="javascript:;">取消订单</a>
         </p>
         <p v-if="showAgainOrder(order.orderState)">
-          <a href="javascript:;">再次购买</a>
+          <a
+            @click="$router.push(`/member/checkout?orderId=${order.id}`)"
+            href="javascript:;"
+            >再次购买</a
+          >
         </p>
         <p v-if="showService(order.orderState)">
           <a href="javascript:;">申请售后</a>

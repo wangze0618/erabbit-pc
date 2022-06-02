@@ -137,19 +137,31 @@ import XtxButton from '@/components/library/xtx-button.vue'
 import XtxBread from '@/components/library/xtx-bread.vue'
 import XtxBreadItem from '@/components/library/xtx-bread-item.vue'
 import CheckoutAddress from './components/checkout-address.vue'
-import { createOrder, submitOrder } from '@/api/order'
+import { createOrder, findOrderRepurchase, submitOrder } from '@/api/order'
 import XtxLoading from '@/components/library/xtx-loading.vue'
 import Message from '@/components/library/Message'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
+const route = useRoute()
 // 结算生成订单-获取订单信息
 const order = ref(null)
 onMounted(async () => {
-  const { result } = await createOrder()
-  order.value = result
-  reqParams.goods = result.goods.map(({ skuId, count }) => ({
-    skuId,
-    count,
-  }))
+  // 有id
+  if (route.query.orderId) {
+    const { result } = await findOrderRepurchase(route.query.orderId)
+    order.value = result
+    reqParams.goods = result.goods.map(({ skuId, count }) => ({
+      skuId,
+      count,
+    }))
+  } else {
+    // 按照购物车的来进行结算
+    const { result } = await createOrder()
+    order.value = result
+    reqParams.goods = result.goods.map(({ skuId, count }) => ({
+      skuId,
+      count,
+    }))
+  }
 })
 
 // 配送时间点击事件
@@ -191,7 +203,6 @@ const submit = async () => {
       Message({ type: 'success', text: '提交订单成功' })
       // 进行跳转
       router.push({ path: '/member/pay', query: { orderId: result.id } })
-      // router.push(`/member/pay?orderId=${result.id}`)
     } catch (error) {}
   }
 }

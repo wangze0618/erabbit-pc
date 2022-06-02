@@ -17,43 +17,99 @@
           size="small"
           >立即付款</XtxButton
         >
-        <XtxButton type="gray" size="small">取消订单</XtxButton>
+        <XtxButton @click="cancelOrder()" type="gray" size="small"
+          >取消订单</XtxButton
+        >
       </template>
       <!-- 待发货 -->
       <template v-if="order.orderState === 2">
         <XtxButton type="primary" size="small">再次购买</XtxButton>
+        <XtxButton @click="consignmentOrder(order.id)" type="plain" size="small"
+          >模拟发货</XtxButton
+        >
       </template>
       <!-- 待收货 -->
       <template v-if="order.orderState === 3">
-        <XtxButton type="primary" size="small">确认收货</XtxButton>
-        <XtxButton type="plain" size="small">再次购买</XtxButton>
+        <XtxButton @click="confirmOrder" type="primary" size="small"
+          >确认收货</XtxButton
+        >
+        <XtxButton
+          @click="$router.push(`/member/checkout?orderId=${order.id}`)"
+          type="plain"
+          size="small"
+          >再次购买</XtxButton
+        >
       </template>
       <!-- 待评价 -->
       <template v-if="order.orderState === 4">
-        <XtxButton type="primary" size="small">再次购买</XtxButton>
+        <XtxButton
+          @click="$router.push(`/member/checkout?orderId=${order.id}`)"
+          type="primary"
+          size="small"
+          >再次购买</XtxButton
+        >
         <XtxButton type="plain" size="small">评价商品</XtxButton>
         <XtxButton type="gray" size="small">申请售后</XtxButton>
       </template>
       <!-- 已完成 -->
       <template v-if="order.orderState === 5">
-        <XtxButton type="primary" size="small">再次购买</XtxButton>
+        <XtxButton
+          @click="$router.push(`/member/checkout?orderId=${order.id}`)"
+          type="primary"
+          size="small"
+          >再次购买</XtxButton
+        >
         <XtxButton type="plain" size="small">查看评价</XtxButton>
         <XtxButton type="gray" size="small">申请售后</XtxButton>
       </template>
       <!-- 已取消 -->
     </div>
+    <OrderCancel ref="orderCancelItem"></OrderCancel>
   </div>
 </template>
 <script setup>
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
 import XtxButton from '@/components/library/xtx-button.vue'
 import { orderStatus } from '@/api/constants'
+import OrderCancel from './order-cancel.vue'
+import { useRouter } from 'vue-router'
+import Message from '@/components/library/Message'
+import confirmBox from '@/components/library/Confirm'
+import { consignOrder, deleteOrder, findOrderDetail } from '@/api/order'
 const props = defineProps({
   order: {
     type: Object,
     default: () => {},
   },
 })
+const router = useRouter()
+const orderCancelItem = ref('')
+
+// 取消订单
+const cancelOrder = () => {
+  orderCancelItem.value.open(props.order)
+  setTimeout(() => {
+    router.push('/member/order')
+  }, 2000)
+}
+// 确认订单
+const confirmOrder = async () => {
+  try {
+    await confirmBox({ text: '确认收货吗？' })
+    await deleteOrder(props.order.id)
+    Message({ type: 'success', text: '确认收货成功' })
+    router.push('/member/order')
+  } catch (error) {}
+}
+// 模拟发货
+const consignmentOrder = async (id) => {
+  try {
+    await confirmBox({ text: '确认发货吗？' })
+    await consignOrder(id)
+    Message({ type: 'success', text: '模拟发货成功' })
+    router.push('/member/order')
+  } catch (error) {}
+}
 </script>
 <style scoped lang="less">
 @media screen and (max-width: 768px) {
