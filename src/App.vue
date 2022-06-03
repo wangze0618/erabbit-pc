@@ -1,8 +1,11 @@
 <template>
   <!-- 一级路由 -->
   <router-view></router-view>
+  <XtxBacktop></XtxBacktop>
 </template>
-<script setup></script>
+<script setup>
+import XtxBacktop from './components/library/xtx-backtop.vue'
+</script>
 <style lang="less">
 #nprogress {
   // 进度条

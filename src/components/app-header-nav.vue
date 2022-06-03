@@ -9,9 +9,12 @@
         @mousemove="show(item)"
         @mouseleave="hide(item)"
       >
-        <router-link @click="hide(item)" :to="`/category/${item.id}`">{{
-          item.name
-        }}</router-link>
+        <router-link
+          exact-class="active"
+          @click="hide(item)"
+          :to="`/category/${item.id}`"
+          >{{ item.name }}</router-link
+        >
         <div class="layer d-none d-lg-block" :class="{ open: item.open }">
           <ul>
             <li v-for="sub in item.children" :key="sub.id">
@@ -23,31 +26,46 @@
           </ul>
         </div>
       </li>
+      <li class="d-block d-sm-none">
+        <router-link to="/login" v-if="!user">登陆</router-link>
+        <router-link to="/member" v-else>{{ profile.account }}</router-link>
+      </li>
+      <li class="d-block d-sm-none">
+        <a @click="logout" href="javascript:;">退出</a>
+      </li>
+      <li class="d-block d-sm-none">
+        <router-link to="/regist" v-if="!user">注册</router-link>
+      </li>
     </ul>
   </div>
 </template>
 
-<script>
+<script setup>
 import { ref, computed } from 'vue'
 import { useStore } from 'vuex'
-export default {
-  name: 'App',
-  setup() {
-    const store = useStore()
-    const list = computed(() => {
-      return store.state.category.list
-    })
-
-    // 控制二级分类显示和隐藏
-    const show = (item) => {
-      store.commit('category/show', item.id)
-    }
-    const hide = (item) => {
-      store.commit('category/hide', item.id)
-    }
-
-    return { list, show, hide }
-  },
+const store = useStore()
+const list = computed(() => {
+  return store.state.category.list
+})
+const logout = () => {
+  store.commit('user/setUser', {})
+  store.commit('cart/setCart', [])
+  router.push('/login')
+}
+const profile = computed(() => {
+  return store.state.user.profile
+})
+const user = () => {
+  if (store.state.user.profile.token) {
+    return true
+  }
+}
+// 控制二级分类显示和隐藏
+const show = (item) => {
+  store.commit('category/show', item.id)
+}
+const hide = (item) => {
+  store.commit('category/hide', item.id)
 }
 </script>
 
@@ -69,7 +87,7 @@ export default {
 }
 
 .navs {
-  padding-right: 20px;
+  // padding-right: 20px;
 }
 .layer {
   &.open {
@@ -139,7 +157,7 @@ export default {
       &:hover {
         > a {
           color: @xtxColor;
-          border-bottom: 1px solid @xtxColor;
+          // border-bottom: 1px solid @xtxColor;
         }
         > .layer {
           z-index: 99;

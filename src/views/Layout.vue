@@ -27,12 +27,11 @@ export default {
   name: 'Layout',
 
   setup() {
+    // 获取头部分类导航渲染数据
     const store = useStore()
     store.dispatch('category/getList')
 
-    const target = ref(null)
-
-    return { target }
+    return {}
   },
   components: { AppTopnav, AppHeader, AppFooter, XtxMore, XtxBacktop },
 }

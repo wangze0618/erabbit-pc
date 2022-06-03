@@ -1,10 +1,12 @@
 <template>
-  <header
+  <!-- <header
     class="navbar navbar-expand-lg navbar-light bg-light app-header"
     :class="{ sticky: scrollTop }"
-  >
+  > -->
+  <header class="navbar navbar-expand-lg navbar-light bg-light app-header">
     <div class="container">
       <h1 class="logo"><RouterLink to="/">小兔鲜</RouterLink></h1>
+
       <!-- 汉堡菜单 -->
       <button
         class="navbar-toggler"
@@ -21,26 +23,19 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <!-- 头部导航组件 -->
         <AppHeaderNav></AppHeaderNav>
-        <template v-if="!scrollTop">
-          <div class="search" :class="{ searchLine: focus }">
-            <i class="iconfont icon-search"></i>
-            <input
-              type="text"
-              @focus="focus = true"
-              @blur="focus = false"
-              class="search-input"
-              placeholder="搜一搜"
-            />
-          </div>
-          <!-- 头部购物车组件 -->
-          <AppHeaderCart></AppHeaderCart>
-        </template>
-        <template v-else>
-          <div class="right">
-            <a href="#">品牌</a>
-            <a href="#">专题</a>
-          </div>
-        </template>
+        <!-- <template v-if="!scrollTop"> -->
+        <div class="search" :class="{ searchLine: focus }">
+          <i class="iconfont icon-search"></i>
+          <input
+            type="text"
+            @focus="focus = true"
+            @blur="focus = false"
+            class="search-input"
+            placeholder="搜一搜"
+          />
+        </div>
+        <!-- 头部购物车组件 -->
+        <AppHeaderCart></AppHeaderCart>
       </div>
     </div>
   </header>
@@ -117,12 +112,12 @@ export default {
   // left: 0;
   z-index: 999;
   box-shadow: 2px 2px 2px lightgray;
-  transition: all 0.5s;
+  // transition: all 0.5s;
 }
 .navbar {
   padding-top: 0;
   padding-bottom: 0;
-  padding-right: 20px;
+  padding-right: 0px !important;
 }
 .app-header {
   background: #fff !important;
