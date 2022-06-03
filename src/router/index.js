@@ -17,6 +17,7 @@ const MemberLayout = () => import('@/views/member/Layout.vue')
 const MemberHome = () => import('@/views/member/home/index.vue')
 const MemberOrder = () => import('@/views/member/order/index.vue')
 const MemberDetail = () => import('@/views/member/order/detail.vue')
+const MemberInfo = () => import('@/views/member/info/index.vue')
 // 路由规则
 const routes = [
   // 一级路由
@@ -42,14 +43,10 @@ const routes = [
             path: '/member',
             component: MemberHome,
           },
-          // {
-          //   path: '/member/order/',
-          //   component: MemberOrder,
-          // },
-          // {
-          //   path: '/member/order/:id',
-          //   component: MemberDetail,
-          // },
+          {
+            path: '/member/info',
+            component: MemberInfo,
+          },
           {
             path: '/member/order',
             // 创建一个RouterView容器形成嵌套关系

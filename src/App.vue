@@ -1,6 +1,7 @@
 <template>
   <!-- 一级路由 -->
   <router-view></router-view>
+  <!-- 返回顶部 -->
   <XtxBacktop></XtxBacktop>
 </template>
 <script setup>

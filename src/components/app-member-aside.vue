@@ -3,14 +3,13 @@
     <div class="user-manage">
       <h4>我的账户</h4>
       <div class="links">
-        <router-link
-          exact-active-class="active"
-          href="javascript:;"
-          to="/member"
+        <router-link exact-active-class="active" to="/member"
           >个人中心</router-link
         >
         <a href="javascript:;">消息通知</a>
-        <a href="javascript:;">个人信息</a>
+        <router-link exact-active-class="active" to="/member/info"
+          >个人信息</router-link
+        >
         <a href="javascript:;">安全设置</a>
         <a href="javascript:;">地址管理</a>
         <a href="javascript:;">我的积分</a>

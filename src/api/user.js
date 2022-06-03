@@ -14,3 +14,12 @@ export const userMobileLoginMsg = (mobile) => {
 export const userMobileLogin = ({ mobile, code }) => {
   return request('/login/code', 'post', { mobile, code })
 }
+
+// 获取个人信息
+export const userInfo = () => {
+  return request('/member/profile', 'get')
+}
+// 修改个人信息
+export const changeUserInfo = (data) => {
+  return request('/member/profile', 'put', data)
+}

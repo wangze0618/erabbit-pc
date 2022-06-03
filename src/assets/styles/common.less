@@ -9,11 +9,12 @@ html {
   height: 100%;
   font-size: 14px;
 }
+
 body {
   height: 100%;
   color: #333;
   // min-width: 1240px;
-  font: 1em/1.4  'PingFang SC', 'Avenir', 'Segoe UI', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Sans Serif', 'WenQuanYi Micro Hei', sans-serif
+  font: 1em/1.4 'PingFang SC', 'Avenir', 'Segoe UI', 'Hiragino Sans GB', 'STHeiti', 'Microsoft Sans Serif', 'WenQuanYi Micro Hei', sans-serif
 }
 
 ul,
@@ -39,13 +40,14 @@ i {
 
 input[type="text"],
 input[type="search"],
-input[type="password"], 
-input[type="checkbox"]{
+input[type="password"],
+input[type="checkbox"] {
   padding: 0;
   outline: none;
   border: none;
   -webkit-appearance: none;
-  &::placeholder{
+
+  &::placeholder {
     color: #ccc;
   }
 }
@@ -66,21 +68,23 @@ ul {
 }
 
 .container {
-// //   width: 1240px;
+  // //   width: 1240px;
   margin: 0 auto !important;
   position: relative;
 }
-@media screen and (min-width:1400px) {
-    .container {
-          width: 1240px;
-          position: relative;
-        }
-  }
+
+// @media screen and (min-width:1400px) {
+//     .container {
+//           width: 1240px;
+//           position: relative;
+//         }
+//   }
 .ellipsis {
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
 }
+
 .ellipsis-1 {
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -112,8 +116,9 @@ ul {
   line-height: 0;
   clear: both;
 }
+
 // 淡出动画
-.fade{
+.fade {
   &-leave {
     &-active {
       position: absolute;
@@ -121,6 +126,7 @@ ul {
       transition: opacity .5s .2s;
       z-index: 1;
     }
+
     &-to {
       opacity: 0;
     }
@@ -134,6 +140,7 @@ ul {
   transform: translateX(20px);
   opacity: 0;
 }
+
 .fade-right-enter-active,
 .fade-right-leave-active {
   transition: all 0.5s;
